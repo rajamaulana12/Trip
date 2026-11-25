@@ -15,7 +15,6 @@ import {
   updateDayOptions,
 } from './components/planner.js';
 import {
-  initCatalogSync,
   reloadFromStorage,
   state,
   subscribe,
@@ -128,7 +127,6 @@ function bootstrap() {
   initModalHandlers();
   initMobileNav();
   initHeroSlideshow();
-  initCatalogSync();
   initAuth();
   initDestinationsSection();
   initFoodAndStay();

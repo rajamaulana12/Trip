@@ -11,13 +11,11 @@ import {
   deleteDoc,
   doc,
   getDocFromServer,
-  getDocs,
   getFirestore,
   onSnapshot,
   query,
   serverTimestamp,
   setDoc,
-  updateDoc,
   where,
   writeBatch,
 } from 'firebase/firestore';
@@ -26,15 +24,6 @@ import firebaseConfig from '../../../firebase-applet-config.json';
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 export const auth = getAuth(app);
-
-export const ADMIN_EMAIL = 'rajagaming199@gmail.com';
-
-const CATALOG_COLLECTION_MAP = {
-  destinasi: 'destinations',
-  kuliner: 'foods',
-  akomodasi: 'stays',
-  paket: 'packages',
-};
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
@@ -85,14 +74,6 @@ async function testConnection() {
 
 testConnection();
 
-export function isAdminUser(user) {
-  return Boolean(
-    user &&
-      user.emailVerified &&
-      String(user.email || '').toLowerCase() === ADMIN_EMAIL,
-  );
-}
-
 export function signInWithGoogle() {
   return signInWithPopup(auth, googleProvider);
 }
@@ -109,276 +90,6 @@ function sanitizeId(value) {
   return String(value || '')
     .replace(/[^a-zA-Z0-9_-]/g, '_')
     .slice(0, 128);
-}
-
-function sanitizeStringList(list, maxLen = 30, itemMax = 120) {
-  if (!Array.isArray(list)) return [];
-  return list
-    .map((x) => String(x || '').trim().slice(0, itemMax))
-    .filter(Boolean)
-    .slice(0, maxLen);
-}
-
-function buildCatalogPayload(type, item) {
-  const id = sanitizeId(item.id);
-  if (type === 'destinasi') {
-    const payload = {
-      id,
-      nama: String(item.nama || '').trim().slice(0, 120) || 'Destinasi',
-      kategori: String(item.kategori || 'Alam').trim().slice(0, 60) || 'Alam',
-      wilayah: String(item.wilayah || 'Banda Aceh').trim().slice(0, 80) || 'Banda Aceh',
-      deskripsi: String(item.deskripsi || '').trim().slice(0, 2000),
-      imageUrl: String(item.imageUrl || '').trim().slice(0, 512),
-      alamat: String(item.alamat || '').trim().slice(0, 300),
-      mapsUrl: String(item.mapsUrl || '').trim().slice(0, 512),
-      estimasiBiaya: Math.min(1000000000, Math.max(0, Number(item.estimasiBiaya) || 0)),
-      fasilitas: sanitizeStringList(item.fasilitas, 30, 120),
-      fasilitasIbadah: sanitizeStringList(item.fasilitasIbadah, 30, 120),
-      unggulan: Boolean(item.unggulan),
-    };
-    if (typeof item.imageData === 'string' && item.imageData.length > 0) {
-      payload.imageData = item.imageData.slice(0, 750000);
-    }
-    return payload;
-  }
-
-  if (type === 'kuliner') {
-    const payload = {
-      id,
-      nama: String(item.nama || '').trim().slice(0, 120) || 'Kuliner',
-      kategori: String(item.kategori || 'Kuliner').trim().slice(0, 60) || 'Kuliner',
-      wilayah: String(item.wilayah || 'Banda Aceh').trim().slice(0, 80) || 'Banda Aceh',
-      harga: Math.min(1000000000, Math.max(0, Number(item.harga) || 0)),
-      imageUrl: String(item.imageUrl || '').trim().slice(0, 512),
-      statusSertifikasiHalal: String(item.statusSertifikasiHalal || 'Belum diverifikasi')
-        .trim()
-        .slice(0, 120),
-      sumberVerifikasi: String(item.sumberVerifikasi || '').trim().slice(0, 250),
-      kontak: String(item.kontak || '').trim().slice(0, 40),
-    };
-    if (typeof item.imageData === 'string' && item.imageData.length > 0) {
-      payload.imageData = item.imageData.slice(0, 750000);
-    }
-    return payload;
-  }
-
-  if (type === 'akomodasi') {
-    const payload = {
-      id,
-      nama: String(item.nama || '').trim().slice(0, 120) || 'Akomodasi',
-      wilayah: String(item.wilayah || 'Banda Aceh').trim().slice(0, 80) || 'Banda Aceh',
-      hargaPerMalam: Math.min(1000000000, Math.max(0, Number(item.hargaPerMalam) || 0)),
-      fasilitas: sanitizeStringList(item.fasilitas, 30, 120),
-      fasilitasRamahMuslim: sanitizeStringList(item.fasilitasRamahMuslim, 30, 120),
-      imageUrl: String(item.imageUrl || '').trim().slice(0, 512),
-      kontak: String(item.kontak || '').trim().slice(0, 40),
-    };
-    if (typeof item.imageData === 'string' && item.imageData.length > 0) {
-      payload.imageData = item.imageData.slice(0, 750000);
-    }
-    return payload;
-  }
-
-  return {
-    id,
-    nama: String(item.nama || '').trim().slice(0, 120) || 'Paket wisata',
-    durasi: Math.min(30, Math.max(1, Number(item.durasi) || 1)),
-    daftarDestinasi: sanitizeStringList(item.daftarDestinasi, 30, 128),
-    estimasiBiaya: Math.min(1000000000, Math.max(0, Number(item.estimasiBiaya) || 0)),
-    deskripsi: String(item.deskripsi || '').trim().slice(0, 2000),
-  };
-}
-
-export function subscribePublicCatalog(onCatalogSlice) {
-  let isSeededInCloud = false;
-  const latestSlices = {
-    destinasi: null,
-    kuliner: null,
-    akomodasi: null,
-    paket: null,
-  };
-
-  const emitIfReady = (type) => {
-    const items = latestSlices[type];
-    if (!items) return;
-    if (isSeededInCloud || items.length > 0) {
-      onCatalogSlice(type, items);
-    }
-  };
-
-  const unsubMeta = onSnapshot(
-    doc(db, 'catalogMeta', 'seedStatus'),
-    (snap) => {
-      isSeededInCloud = Boolean(snap.exists() && snap.data()?.seeded);
-      if (isSeededInCloud) {
-        Object.keys(CATALOG_COLLECTION_MAP).forEach(emitIfReady);
-      }
-    },
-    (error) => {
-      handleFirestoreError(error, OperationType.GET, 'catalogMeta/seedStatus');
-    },
-  );
-
-  const unsubs = Object.entries(CATALOG_COLLECTION_MAP).map(([type, colName]) =>
-    onSnapshot(
-      collection(db, colName),
-      (snapshot) => {
-        const items = snapshot.docs.map((d) => {
-          const data = d.data();
-          const item = { ...data, id: data.id || d.id };
-          delete item.createdAt;
-          delete item.updatedAt;
-          return item;
-        });
-        latestSlices[type] = items;
-        emitIfReady(type);
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.LIST, colName);
-      },
-    ),
-  );
-
-  return () => {
-    unsubMeta();
-    unsubs.forEach((unsub) => unsub());
-  };
-}
-
-export async function ensureCatalogSeeded(adminEmail, seedData) {
-  const metaRef = doc(db, 'catalogMeta', 'seedStatus');
-  let metaSnap;
-  try {
-    metaSnap = await getDocFromServer(metaRef);
-  } catch (error) {
-    handleFirestoreError(error, OperationType.GET, 'catalogMeta/seedStatus');
-  }
-
-  if (metaSnap?.exists() && metaSnap.data()?.seeded) {
-    return false;
-  }
-
-  const batch = writeBatch(db);
-  for (const [type, colName] of Object.entries(CATALOG_COLLECTION_MAP)) {
-    let existingSnap;
-    try {
-      existingSnap = await getDocs(collection(db, colName));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.LIST, colName);
-    }
-    if (existingSnap?.empty) {
-      const list = seedData[type] || [];
-      list.forEach((item) => {
-        const payload = buildCatalogPayload(type, item);
-        batch.set(doc(db, colName, payload.id), {
-          ...payload,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-      });
-    }
-  }
-
-  batch.set(metaRef, {
-    seeded: true,
-    updatedBy: String(adminEmail || ADMIN_EMAIL).slice(0, 254),
-    updatedAt: serverTimestamp(),
-  });
-
-  try {
-    await batch.commit();
-    return true;
-  } catch (error) {
-    handleFirestoreError(error, OperationType.WRITE, 'catalogMeta/seedStatus');
-  }
-  return false;
-}
-
-export async function resetCatalogInFirestore(adminEmail, seedData) {
-  const batch = writeBatch(db);
-  try {
-    for (const [type, colName] of Object.entries(CATALOG_COLLECTION_MAP)) {
-      const existingSnap = await getDocs(collection(db, colName));
-      existingSnap.docs.forEach((d) => {
-        batch.delete(d.ref);
-      });
-      const list = seedData[type] || [];
-      list.forEach((item) => {
-        const payload = buildCatalogPayload(type, item);
-        batch.set(doc(db, colName, payload.id), {
-          ...payload,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-      });
-    }
-
-    batch.set(doc(db, 'catalogMeta', 'seedStatus'), {
-      seeded: true,
-      updatedBy: String(adminEmail || ADMIN_EMAIL).slice(0, 254),
-      updatedAt: serverTimestamp(),
-    });
-
-    await batch.commit();
-  } catch (error) {
-    handleFirestoreError(error, OperationType.WRITE, 'catalogMeta/seedStatus');
-  }
-}
-
-export async function saveCatalogItemToFirestore(type, item, isNew) {
-  const colName = CATALOG_COLLECTION_MAP[type];
-  if (!colName) return;
-
-  const payload = buildCatalogPayload(type, item);
-  const path = `${colName}/${payload.id}`;
-  const ref = doc(db, colName, payload.id);
-
-  if (isNew) {
-    try {
-      await setDoc(ref, {
-        ...payload,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      return;
-    } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, path);
-    }
-  }
-
-  const updatePayload = { ...payload };
-  delete updatePayload.id;
-  updatePayload.updatedAt = serverTimestamp();
-
-  try {
-    await updateDoc(ref, updatePayload);
-  } catch (error) {
-    if (error?.code === 'not-found') {
-      try {
-        await setDoc(ref, {
-          ...payload,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-        return;
-      } catch (createErr) {
-        handleFirestoreError(createErr, OperationType.CREATE, path);
-      }
-    }
-    handleFirestoreError(error, OperationType.UPDATE, path);
-  }
-}
-
-export async function deleteCatalogItemFromFirestore(type, itemId) {
-  const colName = CATALOG_COLLECTION_MAP[type];
-  if (!colName) return;
-  const safeId = sanitizeId(itemId);
-  const path = `${colName}/${safeId}`;
-  try {
-    await deleteDoc(doc(db, colName, safeId));
-  } catch (error) {
-    handleFirestoreError(error, OperationType.DELETE, path);
-  }
 }
 
 export async function syncUserProfile(user) {
