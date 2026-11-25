@@ -1,3 +1,16 @@
+import d1Img from '../../assets/images/dest_baiturrahman_mosque_1795595506539.jpg';
+import d2Img from '../../assets/images/dest_tsunami_museum_1795595506969.jpg';
+import d3Img from '../../assets/images/dest_pltd_apung_1795595507893.jpg';
+import d4Img from '../../assets/images/dest_iboih_beach_1795595508369.jpg';
+import d5Img from '../../assets/images/dest_nol_kilometer_1795595508297.jpg';
+import d6Img from '../../assets/images/dest_lampuuk_beach_1795595509184.jpg';
+import d7Img from '../../assets/images/dest_lhoknga_beach_1795595509718.jpg';
+import d8Img from '../../assets/images/dest_suhom_waterfall_1795595510194.jpg';
+import d9Img from '../../assets/images/dest_laut_tawar_1795595510416.jpg';
+import d10Img from '../../assets/images/dest_toweren_village_1795595511280.jpg';
+import d11Img from '../../assets/images/dest_tansaran_bidin_1795595512305.jpg';
+import d12Img from '../../assets/images/dest_gayo_coffee_1795595526362.jpg';
+
 export const seedDest = [
   {
     id: 'd1',
@@ -6,7 +19,7 @@ export const seedDest = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Ikon kota Banda Aceh dengan arsitektur megah dan nilai sejarah yang kuat. Periksa ketentuan kunjungan dan waktu ibadah.',
-    imageUrl: 'assets/destinasi/d1.jpg',
+    imageUrl: d1Img,
     alamat: 'Kota Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Masjid+Raya+Baiturrahman',
@@ -22,7 +35,7 @@ export const seedDest = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Ruang edukasi dan memorial untuk mengenang peristiwa tsunami 2004. Jam operasional dan tiket perlu diperiksa.',
-    imageUrl: 'assets/destinasi/d2.jpg',
+    imageUrl: d2Img,
     alamat: 'Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Museum+Tsunami+Aceh',
@@ -38,7 +51,7 @@ export const seedDest = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Situs memorial kapal pembangkit listrik yang terseret tsunami. Informasi kunjungan dapat berubah.',
-    imageUrl: 'assets/destinasi/d3.jpg',
+    imageUrl: d3Img,
     alamat: 'Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kapal+PLTD+Apung',
     estimasiBiaya: 10000,
@@ -53,7 +66,7 @@ export const seedDest = [
     wilayah: 'Sabang',
     deskripsi:
       'Kawasan pantai dan laut yang dikenal dengan panorama bawah laut Pulau Weh. Kondisi laut dan layanan perlu dicek.',
-    imageUrl: 'assets/destinasi/d4.jpg',
+    imageUrl: d4Img,
     alamat: 'Iboih, Sukakarya, Sabang (perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Pantai+Iboih+Sabang',
@@ -69,7 +82,7 @@ export const seedDest = [
     wilayah: 'Sabang',
     deskripsi:
       'Titik penanda geografis di Pulau Weh dengan pemandangan alam. Akses dan kondisi fasilitas dapat berubah.',
-    imageUrl: 'assets/destinasi/d5.jpg',
+    imageUrl: d5Img,
     alamat: 'Iboih, Sabang, Aceh (perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Tugu+Nol+Kilometer+Sabang',
@@ -85,7 +98,7 @@ export const seedDest = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Kawasan pesisir dengan bentang pantai yang menarik untuk menikmati suasana laut. Perhatikan keselamatan dan aturan setempat.',
-    imageUrl: 'assets/destinasi/d6.jpg',
+    imageUrl: d6Img,
     alamat: 'Lhoknga, Aceh Besar (perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Pantai+Lampuuk+Aceh+Besar',
@@ -101,7 +114,7 @@ export const seedDest = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Pantai yang populer untuk menikmati pemandangan pesisir. Aktivitas air bergantung cuaca dan kondisi ombak.',
-    imageUrl: 'assets/destinasi/d7.jpg',
+    imageUrl: d7Img,
     alamat: 'Lhoknga, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Lhoknga',
     estimasiBiaya: 10000,
@@ -116,7 +129,7 @@ export const seedDest = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Destinasi alam berupa air terjun di kawasan Lhoong. Periksa kondisi jalur dan keselamatan sebelum berkunjung.',
-    imageUrl: 'assets/destinasi/d8.jpg',
+    imageUrl: d8Img,
     alamat: 'Lhoong, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Suhom',
     estimasiBiaya: 10000,
@@ -131,7 +144,7 @@ export const seedDest = [
     wilayah: 'Aceh Tengah',
     deskripsi:
       'Danau di dataran tinggi Gayo yang dikelilingi perbukitan. Cuaca dan akses lokasi wisata di sekitar danau perlu diperiksa.',
-    imageUrl: 'assets/destinasi/d9.jpg',
+    imageUrl: d9Img,
     alamat: 'Takengon, Aceh Tengah (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Danau+Laut+Tawar',
     estimasiBiaya: 10000,
@@ -146,7 +159,7 @@ export const seedDest = [
     wilayah: 'Aceh Tengah',
     deskripsi:
       'Kawasan permukiman di sekitar Danau Laut Tawar yang dapat menjadi pintu mengenal budaya Gayo. Program kunjungan perlu dikonfirmasi.',
-    imageUrl: 'assets/destinasi/d10.jpg',
+    imageUrl: d10Img,
     alamat: 'Toweren, Aceh Tengah (perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Kampung+Toweren+Aceh+Tengah',
@@ -162,7 +175,7 @@ export const seedDest = [
     wilayah: 'Bener Meriah',
     deskripsi:
       'Tujuan wisata alam di kawasan Bener Meriah. Kondisi jalan, jalur trekking, dan fasilitas perlu diverifikasi sebelum berangkat.',
-    imageUrl: 'assets/destinasi/d11.jpg',
+    imageUrl: d11Img,
     alamat: 'Bener Meriah, Aceh (lokasi rinci perlu verifikasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Tansaran+Bidin',
@@ -178,7 +191,7 @@ export const seedDest = [
     wilayah: 'Bener Meriah',
     deskripsi:
       'Pengalaman mengenal lanskap perkebunan kopi Gayo dan budaya kopi dataran tinggi. Kunjungan kebun harus dengan izin pengelola.',
-    imageUrl: 'assets/destinasi/d12.jpg',
+    imageUrl: d12Img,
     alamat: 'Bener Meriah, Aceh (lokasi kebun perlu konfirmasi)',
     mapsUrl:
       'https://www.google.com/maps/search/?api=1&query=Kebun+Kopi+Gayo+Bener+Meriah',

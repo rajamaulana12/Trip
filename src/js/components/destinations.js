@@ -104,7 +104,7 @@ export function renderDestinations() {
           <div class="visual ${visualClass(d.kategori)}" data-cat="${esc(d.kategori)}">
             ${
               photo
-                ? `<img src="${esc(photo)}" alt="${esc(d.nama)}" loading="lazy" data-fallback-emoji="${categoryEmoji(d.kategori)}">`
+                ? `<img src="${esc(photo)}" alt="${esc(d.nama)}" data-fallback-src="${esc(`assets/destinasi/${d.id}.jpg`)}" data-fallback-emoji="${categoryEmoji(d.kategori)}">`
                 : `<span class="emoji" aria-hidden="true">${categoryEmoji(d.kategori)}</span>`
             }
             <span class="vlabel">${esc(d.wilayah)}</span>
@@ -144,6 +144,12 @@ export function renderDestinations() {
   // Attach clean image error fallbacks without inline event handlers
   container.querySelectorAll('img[data-fallback-emoji]').forEach((img) => {
     img.addEventListener('error', () => {
+      const secondarySrc = img.getAttribute('data-fallback-src');
+      if (secondarySrc && !img.dataset.triedSecondary) {
+        img.dataset.triedSecondary = '1';
+        img.src = secondarySrc;
+        return;
+      }
       const emojiChar = img.getAttribute('data-fallback-emoji') || '✦';
       const fallback = document.createElement('span');
       fallback.className = 'emoji';

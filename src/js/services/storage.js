@@ -24,16 +24,15 @@ export function removeStorage(key) {
 }
 
 export function hydrateDestinations(storedList, seedList) {
-  if (!Array.isArray(storedList)) return clone(seedList);
+  if (!Array.isArray(storedList) || storedList.length === 0) {
+    return clone(seedList);
+  }
   return storedList.map((item) => {
     const seed = seedList.find((s) => s.id === item.id);
-    if (!seed) return item;
-    const isStaleLocalPath =
-      !item.imageUrl ||
-      item.imageUrl.startsWith('/src/assets/') ||
-      item.imageUrl.startsWith('/assets/dest_');
-    return isStaleLocalPath && seed.imageUrl
-      ? { ...item, imageUrl: seed.imageUrl }
-      : item;
+    if (!seed || !seed.imageUrl) return item;
+    if (item.imageUrl !== seed.imageUrl) {
+      return { ...item, imageUrl: seed.imageUrl };
+    }
+    return item;
   });
 }

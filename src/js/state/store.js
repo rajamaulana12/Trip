@@ -15,12 +15,14 @@ import { clone } from '../utils/format.js';
 
 const listeners = new Set();
 
+const initialDestinations = hydrateDestinations(
+  readStorage(STORAGE_KEYS.destinations, seedDest),
+  seedDest,
+);
+
 export const state = {
   data: {
-    destinasi: hydrateDestinations(
-      readStorage(STORAGE_KEYS.destinations, seedDest),
-      seedDest,
-    ),
+    destinasi: initialDestinations,
     kuliner: readStorage(STORAGE_KEYS.foods, seedFood),
     akomodasi: readStorage(STORAGE_KEYS.stays, seedStay),
     paket: readStorage(STORAGE_KEYS.packages, seedPackages),
@@ -34,6 +36,14 @@ export const state = {
   editingId: null,
   tripActivities: [],
 };
+
+try {
+  if (localStorage.getItem(STORAGE_KEYS.destinations)) {
+    writeStorage(STORAGE_KEYS.destinations, initialDestinations);
+  }
+} catch {
+  // Ignore storage write errors on startup
+}
 
 export function subscribe(listener) {
   listeners.add(listener);
