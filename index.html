@@ -214,7 +214,7 @@ let currentUser=read("he_user",null);
 let lang="id",dashType="destinasi",editingId=null;
 let dashUnlocked=false;
 const DASH_PIN="1234";
-data.destinasi.forEach(d=>{const s=seedDest.find(x=>x.id===d.id);if(!d.imageUrl&&s?.imageUrl)d.imageUrl=s.imageUrl});
+data.destinasi.forEach(d=>{const s=seedDest.find(x=>x.id===d.id);if(s?.imageUrl&&(!d.imageUrl||d.imageUrl.startsWith("/src/assets/")||d.imageUrl.startsWith("/assets/dest_")))d.imageUrl=s.imageUrl});
 function persist(){localStorage.setItem("he_dest",JSON.stringify(data.destinasi));localStorage.setItem("he_food",JSON.stringify(data.kuliner));localStorage.setItem("he_stay",JSON.stringify(data.akomodasi));localStorage.setItem("he_pack",JSON.stringify(data.paket));localStorage.setItem("he_favs",JSON.stringify(favorites));localStorage.setItem("he_trips",JSON.stringify(itineraries))}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const SAFE_URL_FALLBACK="https://www.google.com/maps";
