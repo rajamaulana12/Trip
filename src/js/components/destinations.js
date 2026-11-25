@@ -80,6 +80,18 @@ export function renderDestinations() {
 
   if (s === 'name') {
     list.sort((a, b) => a.nama.localeCompare(b.nama));
+  } else if (s === 'region') {
+    list.sort(
+      (a, b) =>
+        (a.wilayah || '').localeCompare(b.wilayah || '') ||
+        a.nama.localeCompare(b.nama),
+    );
+  } else if (s === 'category') {
+    list.sort(
+      (a, b) =>
+        (a.kategori || '').localeCompare(b.kategori || '') ||
+        a.nama.localeCompare(b.nama),
+    );
   } else if (s === 'cost') {
     list.sort((a, b) => a.estimasiBiaya - b.estimasiBiaya);
   } else {

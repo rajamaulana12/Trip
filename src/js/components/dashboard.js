@@ -18,6 +18,9 @@ let pendingDeleteId = null;
 let confirmingReset = false;
 let activePreviewObjectUrl = null;
 let dashSearchQuery = '';
+let dashRegion = '';
+let dashCategory = '';
+let dashSort = 'default';
 
 function normalizeSearchText(str) {
   return String(str || '')
@@ -166,13 +169,112 @@ export function setDashLockUI() {
   }
 }
 
+function resetDashboardFilters() {
+  dashSearchQuery = '';
+  dashRegion = '';
+  dashCategory = '';
+  dashSort = 'default';
+  const searchEl = document.getElementById('dashSearch');
+  if (searchEl) searchEl.value = '';
+  const regionEl = document.getElementById('dashRegionFilter');
+  if (regionEl) regionEl.value = '';
+  const categoryEl = document.getElementById('dashCategoryFilter');
+  if (categoryEl) categoryEl.value = '';
+  const sortEl = document.getElementById('dashSort');
+  if (sortEl) sortEl.value = 'default';
+}
+
+function syncDashboardToolbar() {
+  const type = state.dashType;
+  const rows = state.data[type] || [];
+  const regionEl = document.getElementById('dashRegionFilter');
+  const categoryEl = document.getElementById('dashCategoryFilter');
+  const sortEl = document.getElementById('dashSort');
+
+  const supportsRegion = type !== 'paket';
+  const supportsCategory = type === 'destinasi' || type === 'kuliner';
+
+  if (regionEl) {
+    regionEl.hidden = !supportsRegion;
+    if (supportsRegion) {
+      const regionSet = new Set(REGIONS);
+      rows.forEach((x) => {
+        if (x?.wilayah) regionSet.add(x.wilayah);
+      });
+      const options = Array.from(regionSet);
+      regionEl.innerHTML =
+        '<option value="">Semua wilayah</option>' +
+        options.map((r) => `<option value="${esc(r)}">${esc(r)}</option>`).join('');
+      if (dashRegion && !regionSet.has(dashRegion)) dashRegion = '';
+      regionEl.value = dashRegion;
+    } else {
+      dashRegion = '';
+      regionEl.value = '';
+    }
+  }
+
+  if (categoryEl) {
+    categoryEl.hidden = !supportsCategory;
+    if (supportsCategory) {
+      const catSet = new Set(type === 'destinasi' ? CATEGORIES : []);
+      rows.forEach((x) => {
+        if (x?.kategori) catSet.add(x.kategori);
+      });
+      const options = Array.from(catSet);
+      categoryEl.innerHTML =
+        '<option value="">Semua kategori</option>' +
+        options.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+      if (dashCategory && !catSet.has(dashCategory)) dashCategory = '';
+      categoryEl.value = dashCategory;
+    } else {
+      dashCategory = '';
+      categoryEl.value = '';
+    }
+  }
+
+  if (sortEl) {
+    const sortOptions = [['default', 'Urutkan: Bawaan'], ['name', 'Nama A–Z']];
+    if (supportsRegion) sortOptions.push(['region', 'Wilayah A–Z']);
+    if (supportsCategory) sortOptions.push(['category', 'Kategori A–Z']);
+
+    sortEl.innerHTML = sortOptions
+      .map(([val, label]) => `<option value="${esc(val)}">${esc(label)}</option>`)
+      .join('');
+    if (!sortOptions.some(([val]) => val === dashSort)) {
+      dashSort = 'default';
+    }
+    sortEl.value = dashSort;
+  }
+}
+
 export function renderDashboard() {
   const type = state.dashType;
+  syncDashboardToolbar();
   const allRows = state.data[type] || [];
   const query = dashSearchQuery.trim();
-  const rows = query
-    ? allRows.filter((x) => matchesNameQuery(x.nama, query))
-    : allRows;
+
+  const rows = allRows.filter((x) => {
+    if (query && !matchesNameQuery(x.nama, query)) return false;
+    if (dashRegion && (x.wilayah || '') !== dashRegion) return false;
+    if (dashCategory && (x.kategori || '') !== dashCategory) return false;
+    return true;
+  });
+
+  if (dashSort === 'name') {
+    rows.sort((a, b) => (a.nama || '').localeCompare(b.nama || ''));
+  } else if (dashSort === 'region') {
+    rows.sort(
+      (a, b) =>
+        (a.wilayah || '').localeCompare(b.wilayah || '') ||
+        (a.nama || '').localeCompare(b.nama || ''),
+    );
+  } else if (dashSort === 'category') {
+    rows.sort(
+      (a, b) =>
+        (a.kategori || '').localeCompare(b.kategori || '') ||
+        (a.nama || '').localeCompare(b.nama || ''),
+    );
+  }
 
   const headers =
     type === 'destinasi'
@@ -206,10 +308,16 @@ export function renderDashboard() {
   if (!bodyEl) return;
 
   if (rows.length === 0) {
+    const emptyMsg =
+      query && !dashRegion && !dashCategory
+        ? `Tidak ditemukan data dengan nama "${esc(dashSearchQuery.trim())}".`
+        : query || dashRegion || dashCategory
+          ? 'Tidak ditemukan data yang sesuai filter atau pencarian.'
+          : 'Belum ada data.';
     bodyEl.innerHTML = `
       <tr>
         <td class="dash-empty" colspan="${headers.length + 1}">
-          ${query ? `Tidak ditemukan data dengan nama "${esc(dashSearchQuery.trim())}".` : 'Belum ada data.'}
+          ${emptyMsg}
         </td>
       </tr>
     `;
@@ -385,9 +493,7 @@ export function initDashboard() {
     state.dashUnlocked = false;
     confirmingReset = false;
     pendingDeleteId = null;
-    dashSearchQuery = '';
-    const searchEl = document.getElementById('dashSearch');
-    if (searchEl) searchEl.value = '';
+    resetDashboardFilters();
     setDashLockUI();
     document.getElementById('dashPin')?.focus();
   });
@@ -402,9 +508,7 @@ export function initDashboard() {
     if (!state.dashUnlocked) return;
     confirmingReset = false;
     pendingDeleteId = null;
-    dashSearchQuery = '';
-    const searchEl = document.getElementById('dashSearch');
-    if (searchEl) searchEl.value = '';
+    resetDashboardFilters();
     resetAllDemoData();
     setDashLockUI();
     showToast('Semua data demo berhasil dikembalikan ke awal.', 'success');
@@ -420,9 +524,7 @@ export function initDashboard() {
     if (!btn) return;
     state.dashType = btn.getAttribute('data-type');
     pendingDeleteId = null;
-    dashSearchQuery = '';
-    const searchEl = document.getElementById('dashSearch');
-    if (searchEl) searchEl.value = '';
+    resetDashboardFilters();
     document.querySelectorAll('#dashTabs button').forEach((b) => {
       b.classList.toggle('active', b === btn);
     });
@@ -431,6 +533,28 @@ export function initDashboard() {
 
   document.getElementById('dashSearch')?.addEventListener('input', (e) => {
     dashSearchQuery = e.target.value || '';
+    pendingDeleteId = null;
+    renderDashboard();
+  });
+
+  document
+    .getElementById('dashRegionFilter')
+    ?.addEventListener('change', (e) => {
+      dashRegion = e.target.value || '';
+      pendingDeleteId = null;
+      renderDashboard();
+    });
+
+  document
+    .getElementById('dashCategoryFilter')
+    ?.addEventListener('change', (e) => {
+      dashCategory = e.target.value || '';
+      pendingDeleteId = null;
+      renderDashboard();
+    });
+
+  document.getElementById('dashSort')?.addEventListener('change', (e) => {
+    dashSort = e.target.value || 'default';
     pendingDeleteId = null;
     renderDashboard();
   });

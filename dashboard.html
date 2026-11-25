@@ -139,19 +139,43 @@
             <div class="dash-main">
               <div class="dash-head">
                 <h3 id="dashTitle">Kelola Destinasi</h3>
-                <div class="dash-head-actions">
-                  <div class="dash-search">
-                    <input
-                      id="dashSearch"
-                      type="search"
-                      placeholder="Cari nama..."
-                      aria-label="Cari berdasarkan nama"
-                    />
-                  </div>
-                  <button class="btn small" id="addRecord" type="button">
-                    ＋ Tambah data
-                  </button>
+                <button class="btn small" id="addRecord" type="button">
+                  ＋ Tambah data
+                </button>
+              </div>
+              <div class="dash-tools">
+                <div class="dash-search">
+                  <input
+                    id="dashSearch"
+                    type="search"
+                    placeholder="Cari nama..."
+                    aria-label="Cari berdasarkan nama"
+                  />
                 </div>
+                <select
+                  id="dashRegionFilter"
+                  class="dash-select"
+                  aria-label="Filter berdasarkan wilayah"
+                >
+                  <option value="">Semua wilayah</option>
+                </select>
+                <select
+                  id="dashCategoryFilter"
+                  class="dash-select"
+                  aria-label="Filter berdasarkan kategori"
+                >
+                  <option value="">Semua kategori</option>
+                </select>
+                <select
+                  id="dashSort"
+                  class="dash-select"
+                  aria-label="Urutkan data"
+                >
+                  <option value="default">Urutkan: Bawaan</option>
+                  <option value="name">Nama A–Z</option>
+                  <option value="region">Wilayah A–Z</option>
+                  <option value="category">Kategori A–Z</option>
+                </select>
               </div>
               <div class="table-wrap">
                 <table>
