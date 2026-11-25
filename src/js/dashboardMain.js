@@ -3,6 +3,7 @@ import { initDashboard, renderDashboard } from './components/dashboard.js';
 import { initModalHandlers } from './components/modals.js';
 import { applyTheme, initTheme } from './components/theme.js';
 import {
+  initCatalogSync,
   reloadFromStorage,
   state,
   subscribe,
@@ -29,6 +30,7 @@ function applyLanguage() {
 function bootstrapDashboard() {
   initTheme();
   initModalHandlers();
+  initCatalogSync();
   initDashboard();
 
   document.getElementById('langBtn')?.addEventListener('click', () => {

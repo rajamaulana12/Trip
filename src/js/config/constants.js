@@ -57,7 +57,7 @@ export const TRANSLATIONS = {
     favTitle: 'Destinasi favorit',
     dashTitle: 'Dashboard pengelola',
     dashSubtitle:
-      'Area pengelola dilindungi PIN demo. Data tersimpan lokal di browser ini.',
+      'Area pengelola dilindungi login Google Admin. Semua perubahan tersimpan di Cloud Firestore.',
     backHome: '← Kembali ke Beranda',
     loginEyebrow: 'AKUN PENGUNJUNG',
     loginTitle: 'Masuk dengan Google',
@@ -93,7 +93,7 @@ export const TRANSLATIONS = {
     favTitle: 'Saved favourites',
     dashTitle: 'Manager dashboard',
     dashSubtitle:
-      'Manager area protected by a demo PIN. Data is stored locally in this browser.',
+      'Manager area protected by Google Admin login. Changes are stored in Cloud Firestore.',
     backHome: '← Back to Home',
     loginEyebrow: 'VISITOR ACCOUNT',
     loginTitle: 'Sign in with Google',

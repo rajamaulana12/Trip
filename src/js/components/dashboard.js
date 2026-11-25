@@ -1,13 +1,20 @@
 import {
   CATEGORIES,
-  DASH_PIN,
   REGIONS,
   SAFE_URL_FALLBACK,
 } from '../config/constants.js';
 import {
-  notify,
-  persistCatalog,
-  resetAllDemoData,
+  ADMIN_EMAIL,
+  isAdminUser,
+  signInWithGoogle,
+  signOutGoogle,
+  subscribeAuth,
+} from '../services/firebase.js';
+import {
+  ensureSeededCatalog,
+  removeCatalogRecord,
+  resetAllCatalogData,
+  saveCatalogRecord,
   state,
 } from '../state/store.js';
 import { compressImage, esc, rupiah, safeUrl } from '../utils/format.js';
@@ -21,6 +28,8 @@ let dashSearchQuery = '';
 let dashRegion = '';
 let dashCategory = '';
 let dashSort = 'default';
+let currentAdminEmail = '';
+let authChecking = false;
 
 function normalizeSearchText(str) {
   return String(str || '')
@@ -136,14 +145,15 @@ function fieldsFor(type) {
   ];
 }
 
-export function setDashLockUI() {
+export function setDashLockUI(nonAdminEmail = '') {
   const gate = document.getElementById('dashLogin');
   const content = document.getElementById('dashContent');
   const lockBtn = document.getElementById('lockDash');
   const resetBtn = document.getElementById('resetData');
   const resetConfirm = document.getElementById('resetDataConfirm');
-  const msg = document.getElementById('dashPinMsg');
-  const pinInput = document.getElementById('dashPin');
+  const msg = document.getElementById('dashAuthMsg');
+  const switchBtn = document.getElementById('dashSwitchAccountBtn');
+  const adminChip = document.getElementById('dashAdminChip');
 
   if (gate) gate.hidden = state.dashUnlocked;
   if (content) content.hidden = !state.dashUnlocked;
@@ -160,12 +170,30 @@ export function setDashLockUI() {
       !state.dashUnlocked || !confirmingReset,
     );
   }
+  if (adminChip) {
+    if (state.dashUnlocked && currentAdminEmail) {
+      adminChip.hidden = false;
+      adminChip.textContent = currentAdminEmail;
+      adminChip.title = currentAdminEmail;
+    } else {
+      adminChip.hidden = true;
+      adminChip.textContent = '';
+      adminChip.title = '';
+    }
+  }
   if (msg) {
     msg.classList.remove('ok');
-    msg.textContent = '';
+    if (!state.dashUnlocked && nonAdminEmail) {
+      msg.textContent = `Akun ${nonAdminEmail} belum terdaftar sebagai pengelola (${ADMIN_EMAIL}).`;
+    } else {
+      msg.textContent = '';
+    }
   }
-  if (!state.dashUnlocked && pinInput) {
-    pinInput.value = '';
+  if (switchBtn) {
+    switchBtn.classList.toggle(
+      'hidden',
+      state.dashUnlocked || !nonAdminEmail,
+    );
   }
 }
 
@@ -336,13 +364,13 @@ export function renderDashboard() {
                   x.nama,
                   x.wilayah,
                   rupiah(x.hargaPerMalam),
-                  x.fasilitas.join(', '),
+                  (x.fasilitas || []).join(', '),
                 ]
               : [
                   x.nama,
                   `${x.durasi} hari`,
                   rupiah(x.estimasiBiaya),
-                  `${x.daftarDestinasi.length} tempat`,
+                  `${(x.daftarDestinasi || []).length} tempat`,
                 ];
 
       const isConfirming = pendingDeleteId === x.id;
@@ -452,50 +480,95 @@ function showEditModal(item) {
   openModal('editModal');
 }
 
+function formatGoogleAuthError(error) {
+  const code = error?.code || '';
+  if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+    return 'Pemilihan akun Google dibatalkan.';
+  }
+  if (code === 'auth/popup-blocked') {
+    return 'Popup login diblokir oleh browser. Izinkan popup lalu coba lagi.';
+  }
+  return 'Gagal masuk dengan Google. Silakan coba lagi.';
+}
+
 export function initDashboard() {
   setDashLockUI();
 
-  document.getElementById('dashLoginForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = document.getElementById('dashPin');
-    const msg = document.getElementById('dashPinMsg');
-    const pin = (input?.value || '').trim();
-
-    if (!pin) {
-      if (msg) {
-        msg.classList.remove('ok');
-        msg.textContent = 'PIN belum diisi.';
-      }
-      input?.focus();
+  subscribeAuth(async (user) => {
+    if (!user) {
+      state.dashUnlocked = false;
+      currentAdminEmail = '';
+      setDashLockUI();
       return;
     }
 
-    if (pin !== DASH_PIN) {
+    if (!isAdminUser(user)) {
       state.dashUnlocked = false;
-      if (msg) {
-        msg.classList.remove('ok');
-        msg.textContent = 'PIN salah. Coba lagi.';
-      }
-      if (input) {
-        input.value = '';
-        input.focus();
-      }
+      currentAdminEmail = '';
+      setDashLockUI(user.email || user.displayName || 'Akun');
       return;
     }
 
     state.dashUnlocked = true;
+    currentAdminEmail = user.email || ADMIN_EMAIL;
     setDashLockUI();
     renderDashboard();
-    showToast('Dashboard pengelola terbuka.', 'success');
+
+    try {
+      await ensureSeededCatalog(currentAdminEmail);
+    } catch (error) {
+      console.error('Failed to ensure seeded catalog:', error);
+    }
   });
 
-  document.getElementById('lockDash')?.addEventListener('click', () => {
-    state.dashUnlocked = false;
-    confirmingReset = false;
-    pendingDeleteId = null;
-    resetDashboardFilters();
-    setDashLockUI();
-    document.getElementById('dashPin')?.focus();
+  document.getElementById('dashGoogleBtn')?.addEventListener('click', async () => {
+    if (authChecking) return;
+    const btn = document.getElementById('dashGoogleBtn');
+    const msg = document.getElementById('dashAuthMsg');
+    authChecking = true;
+    if (btn) btn.disabled = true;
+    if (msg) {
+      msg.classList.remove('ok');
+      msg.textContent = '';
+    }
+    try {
+      const res = await signInWithGoogle();
+      if (isAdminUser(res?.user)) {
+        showToast('Dashboard pengelola terbuka.', 'success');
+      }
+    } catch (error) {
+      if (msg) {
+        msg.classList.remove('ok');
+        msg.textContent = formatGoogleAuthError(error);
+      }
+    } finally {
+      authChecking = false;
+      if (btn) btn.disabled = false;
+    }
+  });
+
+  document.getElementById('dashSwitchAccountBtn')?.addEventListener('click', async () => {
+    try {
+      await signOutGoogle();
+      showToast('Silakan masuk kembali dengan akun Google pengelola.');
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  document.getElementById('lockDash')?.addEventListener('click', async () => {
+    try {
+      await signOutGoogle();
+      state.dashUnlocked = false;
+      currentAdminEmail = '';
+      confirmingReset = false;
+      pendingDeleteId = null;
+      resetDashboardFilters();
+      setDashLockUI();
+      showToast('Berhasil keluar dari dashboard pengelola.');
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   document.getElementById('resetData')?.addEventListener('click', () => {
@@ -504,14 +577,23 @@ export function initDashboard() {
     setDashLockUI();
   });
 
-  document.getElementById('resetDataYes')?.addEventListener('click', () => {
+  document.getElementById('resetDataYes')?.addEventListener('click', async () => {
     if (!state.dashUnlocked) return;
-    confirmingReset = false;
-    pendingDeleteId = null;
-    resetDashboardFilters();
-    resetAllDemoData();
-    setDashLockUI();
-    showToast('Semua data demo berhasil dikembalikan ke awal.', 'success');
+    const yesBtn = document.getElementById('resetDataYes');
+    if (yesBtn) yesBtn.disabled = true;
+    try {
+      await resetAllCatalogData(currentAdminEmail);
+      confirmingReset = false;
+      pendingDeleteId = null;
+      resetDashboardFilters();
+      setDashLockUI();
+      showToast('Semua data katalog di Firestore dikembalikan ke awal.', 'success');
+    } catch (error) {
+      console.error(error);
+      showToast('Gagal mereset katalog di Firestore.', 'error');
+    } finally {
+      if (yesBtn) yesBtn.disabled = false;
+    }
   });
 
   document.getElementById('resetDataCancel')?.addEventListener('click', () => {
@@ -564,7 +646,7 @@ export function initDashboard() {
     showEditModal(null);
   });
 
-  document.getElementById('dashBody')?.addEventListener('click', (e) => {
+  document.getElementById('dashBody')?.addEventListener('click', async (e) => {
     if (!state.dashUnlocked) return;
     const btn = e.target.closest('button[data-action]');
     if (!btn) return;
@@ -581,13 +663,16 @@ export function initDashboard() {
       pendingDeleteId = null;
       renderDashboard();
     } else if (action === 'confirm-delete' && id) {
-      state.data[state.dashType] = state.data[state.dashType].filter(
-        (x) => x.id !== id,
-      );
-      pendingDeleteId = null;
-      persistCatalog();
-      notify('all');
-      showToast('Data berhasil dihapus.');
+      btn.disabled = true;
+      try {
+        await removeCatalogRecord(state.dashType, id);
+        pendingDeleteId = null;
+        showToast('Data berhasil dihapus dari Firestore.');
+      } catch (error) {
+        console.error(error);
+        showToast('Gagal menghapus data di Firestore.', 'error');
+        btn.disabled = false;
+      }
     }
   });
 
@@ -616,6 +701,7 @@ export function initDashboard() {
       if (!state.dashUnlocked) return;
 
       const form = e.target;
+      const saveBtn = document.getElementById('saveRecordBtn');
       const fields = fieldsFor(state.dashType);
       const obj = {};
 
@@ -668,39 +754,41 @@ export function initDashboard() {
         obj.imageData = current.imageData;
       }
 
-      if (state.editingId) {
-        const idx = state.data[state.dashType].findIndex(
-          (x) => x.id === state.editingId,
-        );
-        if (idx !== -1) {
-          state.data[state.dashType][idx] = {
-            ...state.data[state.dashType][idx],
+      const isNew = !state.editingId;
+      const record = isNew
+        ? {
             ...obj,
+            id: state.dashType.slice(0, 1) + Date.now(),
+            ...(state.dashType === 'destinasi'
+              ? {
+                  imageUrl: '',
+                  unggulan: Boolean(obj.unggulan),
+                  mapsUrl: obj.mapsUrl || SAFE_URL_FALLBACK,
+                }
+              : state.dashType !== 'paket'
+                ? { imageUrl: '' }
+                : {}),
+          }
+        : {
+            ...current,
+            ...obj,
+            id: current.id,
           };
-        }
-      } else {
-        obj.id = state.dashType.slice(0, 1) + Date.now();
-        if (state.dashType === 'destinasi') {
-          obj.imageUrl = '';
-          obj.unggulan = Boolean(obj.unggulan);
-          obj.mapsUrl = obj.mapsUrl || SAFE_URL_FALLBACK;
-        }
-        state.data[state.dashType].push(obj);
-      }
 
+      if (saveBtn) saveBtn.disabled = true;
       try {
-        persistCatalog();
-      } catch {
+        await saveCatalogRecord(state.dashType, record, isNew);
+        revokePreviewUrl();
+        closeModal('editModal');
+        showToast('Data berhasil disimpan ke Firestore.', 'success');
+      } catch (error) {
+        console.error(error);
         showToast(
-          'Penyimpanan gagal. Ukuran gambar mungkin terlalu besar.',
+          'Gagal menyimpan ke Firestore. Periksa ukuran gambar atau koneksi.',
           'error',
         );
-        return;
+      } finally {
+        if (saveBtn) saveBtn.disabled = false;
       }
-
-      revokePreviewUrl();
-      closeModal('editModal');
-      notify('all');
-      showToast('Data berhasil disimpan.', 'success');
     });
 }

@@ -57,19 +57,29 @@ export function compressImage(file) {
       const img = new Image();
       img.onerror = () => reject(new Error('Format gambar tidak dapat dibaca.'));
       img.onload = () => {
-        const maxW = 1200;
-        const maxH = 900;
-        const scale = Math.min(1, maxW / img.width, maxH / img.height);
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
+        const encode = (maxW, maxH, quality) => {
+          const scale = Math.min(1, maxW / img.width, maxH / img.height);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return null;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          return canvas.toDataURL('image/jpeg', quality);
+        };
+
+        let dataUrl = encode(900, 675, 0.72);
+        if (!dataUrl) {
           reject(new Error('Canvas tidak tersedia.'));
           return;
         }
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.78));
+        if (dataUrl.length > 650000) {
+          dataUrl = encode(800, 600, 0.55) || dataUrl;
+        }
+        if (dataUrl.length > 650000) {
+          dataUrl = encode(640, 480, 0.45) || dataUrl;
+        }
+        resolve(dataUrl);
       };
       img.src = String(reader.result || '');
     };

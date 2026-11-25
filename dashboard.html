@@ -32,6 +32,7 @@
         </a>
 
         <div class="nav-actions">
+          <span class="user-chip" id="dashAdminChip" hidden></span>
           <button
             class="icon-btn theme-toggle"
             id="themeBtn"
@@ -57,25 +58,25 @@
         <div class="wrap">
           <div class="section-head">
             <div>
-              <p class="eyebrow">LOCAL DEMO CMS</p>
+              <p class="eyebrow">CLOUD CMS · FIRESTORE</p>
               <h1 class="region-title" data-i18n="dashTitle" style="margin-top: 6px;">
                 Dashboard pengelola
               </h1>
               <p data-i18n="dashSubtitle">
-                Area pengelola dilindungi PIN demo. Data tersimpan lokal di
-                browser ini.
+                Area pengelola dilindungi login Google Admin. Semua perubahan
+                tersimpan di Cloud Firestore.
               </p>
             </div>
             <div class="card-actions">
               <button class="btn ghost small hidden" id="lockDash" type="button">
-                Kunci dashboard
+                Keluar pengelola
               </button>
               <button class="btn ghost small hidden" id="resetData" type="button">
-                Reset data demo
+                Reset data awal
               </button>
               <div class="card-actions hidden" id="resetDataConfirm">
                 <button class="btn danger small" id="resetDataYes" type="button">
-                  Ya, reset demo
+                  Ya, reset awal
                 </button>
                 <button
                   class="btn ghost small"
@@ -92,37 +93,53 @@
             <p class="eyebrow">AREA PENGELOLA</p>
             <h3>Masuk ke dashboard</h3>
             <p>
-              Masukkan PIN untuk mengelola destinasi, kuliner, akomodasi, dan
-              paket wisata.
+              Masuk menggunakan akun Google pengelola untuk mengelola destinasi,
+              kuliner, akomodasi, dan paket wisata di Firestore.
             </p>
-            <form id="dashLoginForm" novalidate>
-              <div class="field">
-                <label for="dashPin">PIN pengelola</label>
-                <input
-                  id="dashPin"
-                  class="pin-input"
-                  name="pin"
-                  type="password"
-                  inputmode="numeric"
-                  autocomplete="current-password"
-                  maxlength="12"
-                  placeholder="••••"
-                  required
+            <button class="google-btn" id="dashGoogleBtn" type="button">
+              <svg
+                class="google-btn-icon"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                aria-hidden="true"
+              >
+                <path
+                  fill="#4285F4"
+                  d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.54 5.54 0 0 1-2.4 3.63v3.02h3.88c2.27-2.09 3.54-5.17 3.54-8.89Z"
                 />
-              </div>
-              <div
-                class="form-msg"
-                id="dashPinMsg"
-                role="status"
-                aria-live="polite"
-              ></div>
-              <button class="btn" type="submit" style="width: 100%;">
-                Buka dashboard
-              </button>
-            </form>
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.02c-1.08.72-2.45 1.15-4.05 1.15-3.12 0-5.77-2.11-6.72-4.95H1.27v3.11A12 12 0 0 0 12 24Z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.28 14.27A7.2 7.2 0 0 1 4.9 12c0-.79.14-1.56.38-2.27V6.62H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38l4.01-3.11Z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.78c1.76 0 3.34.61 4.58 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.27 6.62l4.01 3.11C6.23 6.89 8.88 4.78 12 4.78Z"
+                />
+              </svg>
+              <span>Lanjutkan dengan Google</span>
+            </button>
+            <div
+              class="form-msg"
+              id="dashAuthMsg"
+              role="status"
+              aria-live="polite"
+            ></div>
+            <button
+              class="btn ghost small hidden"
+              id="dashSwitchAccountBtn"
+              type="button"
+              style="width: 100%; margin-top: 6px;"
+            >
+              Keluar &amp; ganti akun Google
+            </button>
             <p style="font-size: 11px; margin: 14px 0 0;">
-              PIN demo: 1234 · Proteksi ini hanya simulasi di browser, bukan
-              keamanan sungguhan.
+              Hanya akun pengelola terverifikasi yang dapat mengubah data katalog
+              di Firestore.
             </p>
           </div>
 
@@ -184,8 +201,8 @@
                 </table>
               </div>
               <p class="muted" style="font-size: 11px; margin-bottom: 0;">
-                Perubahan disimpan pada localStorage browser. Jangan masukkan
-                data pribadi atau data usaha nyata tanpa izin.
+                Perubahan disimpan ke Cloud Firestore dan langsung sinkron ke
+                halaman utama.
               </p>
             </div>
           </div>
@@ -201,16 +218,16 @@
             <span>Aceh Trip</span>
           </div>
           <p class="footer-desc">
-            Area pengelolaan konten lokal untuk katalog destinasi, kuliner,
+            Area pengelolaan konten untuk katalog destinasi, kuliner,
             akomodasi, dan paket wisata Aceh.
           </p>
         </div>
         <div>
-          <b>Informasi demo</b>
+          <b>Penyimpanan Cloud</b>
           <p style="max-width: 320px; margin: 6px 0 0;">
             <small>
-              Perubahan yang disimpan di halaman ini otomatis tampil pada halaman
-              utama di browser yang sama.
+              Perubahan yang disimpan di halaman ini tersinkronisasi melalui
+              Cloud Firestore ke seluruh pengunjung.
             </small>
           </p>
         </div>
@@ -249,8 +266,8 @@
             >
             <input id="recordImage" type="file" accept="image/*" />
             <span class="upload-hint">
-              Pilih JPG, PNG, atau WEBP. Gambar akan diperkecil otomatis dan
-              disimpan di browser ini.
+              Pilih JPG, PNG, atau WEBP. Gambar diperkecil otomatis dan
+              disimpan ke Cloud Firestore.
             </span>
             <img
               id="imagePreview"
@@ -262,7 +279,7 @@
             <button type="button" class="btn ghost" data-close="editModal">
               Batal
             </button>
-            <button class="btn" type="submit">Simpan data</button>
+            <button class="btn" id="saveRecordBtn" type="submit">Simpan data</button>
           </div>
         </form>
       </div>

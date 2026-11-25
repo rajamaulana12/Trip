@@ -8,9 +8,14 @@ import {
 import {
   addUserFavorite,
   clearUserFavorites,
+  deleteCatalogItemFromFirestore,
   deleteUserItinerary,
+  ensureCatalogSeeded,
   removeUserFavorite,
+  resetCatalogInFirestore,
+  saveCatalogItemToFirestore,
   saveUserItinerary,
+  subscribePublicCatalog,
 } from '../services/firebase.js';
 import {
   hydrateDestinations,
@@ -21,6 +26,7 @@ import {
 import { clone } from '../utils/format.js';
 
 const listeners = new Set();
+let catalogUnsub = null;
 
 const initialDestinations = hydrateDestinations(
   readStorage(STORAGE_KEYS.destinations, seedDest),
@@ -77,14 +83,73 @@ export function notify(topic = 'all') {
 }
 
 export function persistCatalog() {
-  writeStorage(STORAGE_KEYS.destinations, state.data.destinasi);
-  writeStorage(STORAGE_KEYS.foods, state.data.kuliner);
-  writeStorage(STORAGE_KEYS.stays, state.data.akomodasi);
-  writeStorage(STORAGE_KEYS.packages, state.data.paket);
-  if (!state.authUser) {
-    writeStorage(STORAGE_KEYS.favorites, state.favorites);
-    writeStorage(STORAGE_KEYS.itineraries, state.itineraries);
+  try {
+    writeStorage(STORAGE_KEYS.destinations, state.data.destinasi);
+    writeStorage(STORAGE_KEYS.foods, state.data.kuliner);
+    writeStorage(STORAGE_KEYS.stays, state.data.akomodasi);
+    writeStorage(STORAGE_KEYS.packages, state.data.paket);
+    if (!state.authUser) {
+      writeStorage(STORAGE_KEYS.favorites, state.favorites);
+      writeStorage(STORAGE_KEYS.itineraries, state.itineraries);
+    }
+  } catch {
+    // Ignore localStorage quota errors when catalog is persisted in Firestore
   }
+}
+
+export function initCatalogSync() {
+  if (catalogUnsub) return catalogUnsub;
+  catalogUnsub = subscribePublicCatalog((type, items) => {
+    state.data[type] =
+      type === 'destinasi'
+        ? hydrateDestinations(items, seedDest)
+        : items;
+    notify('all');
+  });
+  return catalogUnsub;
+}
+
+export async function ensureSeededCatalog(adminEmail) {
+  return ensureCatalogSeeded(adminEmail, {
+    destinasi: clone(seedDest),
+    kuliner: clone(seedFood),
+    akomodasi: clone(seedStay),
+    paket: clone(seedPackages),
+  });
+}
+
+export async function saveCatalogRecord(type, item, isNew) {
+  await saveCatalogItemToFirestore(type, item, isNew);
+  if (isNew) {
+    state.data[type] = [...state.data[type], item];
+  } else {
+    const idx = state.data[type].findIndex((x) => x.id === item.id);
+    if (idx !== -1) {
+      state.data[type][idx] = { ...state.data[type][idx], ...item };
+    }
+  }
+  persistCatalog();
+  notify('all');
+}
+
+export async function removeCatalogRecord(type, id) {
+  await deleteCatalogItemFromFirestore(type, id);
+  state.data[type] = state.data[type].filter((x) => x.id !== id);
+  persistCatalog();
+  notify('all');
+}
+
+export async function resetAllCatalogData(adminEmail) {
+  const fresh = {
+    destinasi: clone(seedDest),
+    kuliner: clone(seedFood),
+    akomodasi: clone(seedStay),
+    paket: clone(seedPackages),
+  };
+  await resetCatalogInFirestore(adminEmail, fresh);
+  state.data = fresh;
+  persistCatalog();
+  notify('all');
 }
 
 export function destById(id) {
