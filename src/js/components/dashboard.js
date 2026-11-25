@@ -17,6 +17,60 @@ import { showToast } from './toast.js';
 let pendingDeleteId = null;
 let confirmingReset = false;
 let activePreviewObjectUrl = null;
+let dashSearchQuery = '';
+
+function normalizeSearchText(str) {
+  return String(str || '')
+    .toLowerCase()
+    .replace(/mesjid/g, 'masjid')
+    .trim();
+}
+
+function editDistance(a, b) {
+  const m = a.length;
+  const n = b.length;
+  if (!m) return n;
+  if (!n) return m;
+  const prev = Array.from({ length: n + 1 }, (_, j) => j);
+  const curr = new Array(n + 1);
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(
+        prev[j] + 1,
+        curr[j - 1] + 1,
+        prev[j - 1] + cost,
+      );
+    }
+    for (let j = 0; j <= n; j++) prev[j] = curr[j];
+  }
+  return prev[n];
+}
+
+function matchesNameQuery(name, rawQuery) {
+  const query = normalizeSearchText(rawQuery);
+  if (!query) return true;
+  const normName = normalizeSearchText(name);
+  if (!normName) return false;
+  if (normName.includes(query)) return true;
+
+  const nameWords = normName.split(/\s+/).filter(Boolean);
+  const tokens = query.split(/\s+/).filter(Boolean);
+
+  return tokens.every((token) => {
+    if (normName.includes(token)) return true;
+    if (token.length <= 2) return false;
+    const maxDist = token.length >= 6 ? 2 : 1;
+    return nameWords.some((word) => {
+      if (editDistance(token, word) <= maxDist) return true;
+      if (word.length >= token.length) {
+        return editDistance(token, word.slice(0, token.length)) <= maxDist;
+      }
+      return false;
+    });
+  });
+}
 
 function revokePreviewUrl() {
   if (activePreviewObjectUrl) {
@@ -114,7 +168,12 @@ export function setDashLockUI() {
 
 export function renderDashboard() {
   const type = state.dashType;
-  const rows = state.data[type] || [];
+  const allRows = state.data[type] || [];
+  const query = dashSearchQuery.trim();
+  const rows = query
+    ? allRows.filter((x) => matchesNameQuery(x.nama, query))
+    : allRows;
+
   const headers =
     type === 'destinasi'
       ? ['Nama', 'Wilayah', 'Kategori', 'Biaya']
@@ -145,6 +204,17 @@ export function renderDashboard() {
       '<th>Aksi</th></tr>';
   }
   if (!bodyEl) return;
+
+  if (rows.length === 0) {
+    bodyEl.innerHTML = `
+      <tr>
+        <td class="dash-empty" colspan="${headers.length + 1}">
+          ${query ? `Tidak ditemukan data dengan nama "${esc(dashSearchQuery.trim())}".` : 'Belum ada data.'}
+        </td>
+      </tr>
+    `;
+    return;
+  }
 
   bodyEl.innerHTML = rows
     .map((x) => {
@@ -315,6 +385,9 @@ export function initDashboard() {
     state.dashUnlocked = false;
     confirmingReset = false;
     pendingDeleteId = null;
+    dashSearchQuery = '';
+    const searchEl = document.getElementById('dashSearch');
+    if (searchEl) searchEl.value = '';
     setDashLockUI();
     document.getElementById('dashPin')?.focus();
   });
@@ -329,6 +402,9 @@ export function initDashboard() {
     if (!state.dashUnlocked) return;
     confirmingReset = false;
     pendingDeleteId = null;
+    dashSearchQuery = '';
+    const searchEl = document.getElementById('dashSearch');
+    if (searchEl) searchEl.value = '';
     resetAllDemoData();
     setDashLockUI();
     showToast('Semua data demo berhasil dikembalikan ke awal.', 'success');
@@ -344,9 +420,18 @@ export function initDashboard() {
     if (!btn) return;
     state.dashType = btn.getAttribute('data-type');
     pendingDeleteId = null;
+    dashSearchQuery = '';
+    const searchEl = document.getElementById('dashSearch');
+    if (searchEl) searchEl.value = '';
     document.querySelectorAll('#dashTabs button').forEach((b) => {
       b.classList.toggle('active', b === btn);
     });
+    renderDashboard();
+  });
+
+  document.getElementById('dashSearch')?.addEventListener('input', (e) => {
+    dashSearchQuery = e.target.value || '';
+    pendingDeleteId = null;
     renderDashboard();
   });
 
