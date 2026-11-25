@@ -5,6 +5,9 @@ export function readStorage(key, fallback) {
     const raw = localStorage.getItem(key);
     if (!raw) return clone(fallback);
     const parsed = JSON.parse(raw);
+    if (Array.isArray(fallback)) {
+      return Array.isArray(parsed) ? parsed : clone(fallback);
+    }
     return parsed ?? clone(fallback);
   } catch {
     return clone(fallback);
@@ -27,12 +30,25 @@ export function hydrateDestinations(storedList, seedList) {
   if (!Array.isArray(storedList) || storedList.length === 0) {
     return clone(seedList);
   }
-  return storedList.map((item) => {
-    const seed = seedList.find((s) => s.id === item.id);
-    if (!seed || !seed.imageUrl) return item;
-    if (item.imageUrl !== seed.imageUrl) {
-      return { ...item, imageUrl: seed.imageUrl };
-    }
-    return item;
-  });
+  const clean = storedList
+    .filter((item) => item && typeof item === 'object' && item.id)
+    .map((item) => {
+      const seed = seedList.find((s) => s.id === item.id);
+      if (!seed) return item;
+      return {
+        ...seed,
+        ...item,
+        imageUrl: seed.imageUrl,
+        imageData:
+          typeof item.imageData === 'string' &&
+          item.imageData.startsWith('data:image/')
+            ? item.imageData
+            : undefined,
+        fasilitas: Array.isArray(item.fasilitas) ? item.fasilitas : seed.fasilitas,
+        fasilitasIbadah: Array.isArray(item.fasilitasIbadah)
+          ? item.fasilitasIbadah
+          : seed.fasilitasIbadah,
+      };
+    });
+  return clean.length ? clean : clone(seedList);
 }

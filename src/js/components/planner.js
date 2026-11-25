@@ -122,7 +122,7 @@ export function renderSavedTrips() {
           <div>
             <strong>${esc(trip.namaPerjalanan)}</strong>
             <div class="muted" style="font-size: 11px;">
-              ${trip.jumlahHari} hari · ${trip.jumlahWisatawan} wisatawan · ${trip.daftarAktivitas.length} aktivitas ·
+              ${trip.jumlahHari || 1} hari · ${trip.jumlahWisatawan || 1} wisatawan · ${(trip.daftarAktivitas || []).length} aktivitas ·
               <span class="tabular">${rupiah(trip.totalAnggaran)}</span>
               ${trip.createdBy ? ` · ${esc(trip.createdBy)}` : ''}
             </div>

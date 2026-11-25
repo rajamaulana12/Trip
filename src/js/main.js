@@ -54,17 +54,25 @@ function initMobileNav() {
   });
 }
 
+function safeRun(fn) {
+  try {
+    fn();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 function renderAll() {
-  applyLanguage();
-  renderDestinations();
-  renderFood();
-  renderStays();
-  renderFavorites();
-  renderSavedTrips();
-  renderDashboard();
-  updateDayOptions();
-  calculateBudget(true);
-  renderItinerary();
+  safeRun(applyLanguage);
+  safeRun(renderDestinations);
+  safeRun(renderFood);
+  safeRun(renderStays);
+  safeRun(renderFavorites);
+  safeRun(renderSavedTrips);
+  safeRun(renderDashboard);
+  safeRun(updateDayOptions);
+  safeRun(() => calculateBudget(true));
+  safeRun(renderItinerary);
 }
 
 function bootstrap() {
