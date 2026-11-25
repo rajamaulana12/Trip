@@ -3,6 +3,7 @@ import { initAuth, syncUserUI } from './components/auth.js';
 import { initDestinationsSection, renderDestinations } from './components/destinations.js';
 import { initFavorites, renderFavorites } from './components/favorites.js';
 import { initFoodAndStay, renderFood, renderStays } from './components/foodAndStay.js';
+import { initHeroSlideshow, renderHeroSlideshow } from './components/heroSlideshow.js';
 import { initModalHandlers } from './components/modals.js';
 import { initPackages } from './components/packages.js';
 import {
@@ -68,6 +69,7 @@ function safeRun(fn) {
 
 function renderAll() {
   safeRun(applyLanguage);
+  safeRun(renderHeroSlideshow);
   safeRun(renderDestinations);
   safeRun(renderFood);
   safeRun(renderStays);
@@ -81,6 +83,7 @@ function renderAll() {
 function bootstrap() {
   initModalHandlers();
   initMobileNav();
+  initHeroSlideshow();
   initAuth();
   initDestinationsSection();
   initFoodAndStay();

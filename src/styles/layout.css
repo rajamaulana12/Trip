@@ -207,14 +207,59 @@
   box-shadow: 0 24px 55px rgba(18, 59, 82, 0.22);
 }
 
-.hero-photo {
+.hero-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-slide {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  z-index: 0;
+  opacity: 0;
+  transition: opacity 1.15s ease-in-out;
+  will-change: opacity, transform;
+}
+
+.hero-slide.pan-a {
+  animation: heroPanA 9s ease-in-out infinite alternate;
+}
+
+.hero-slide.pan-b {
+  animation: heroPanB 9s ease-in-out infinite alternate;
+}
+
+.hero-slide.is-prev {
+  opacity: 0;
+  z-index: 1;
+}
+
+.hero-slide.is-active {
+  opacity: 1;
+  z-index: 2;
+}
+
+@keyframes heroPanA {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.1) translate3d(-1.8%, -1.2%, 0);
+  }
+}
+
+@keyframes heroPanB {
+  0% {
+    transform: scale(1.08) translate3d(1.6%, 0.8%, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(-1%, -1.4%, 0);
+  }
 }
 
 .hero-art::before {
@@ -275,9 +320,37 @@
   z-index: 2;
 }
 
+.hero-dots {
+  position: absolute;
+  left: 24px;
+  top: 22px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 108px);
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.hero-dot.is-active {
+  width: 22px;
+  background: var(--gold-400);
+}
+
 .hero-label {
   position: absolute;
   left: 24px;
+  right: 24px;
   bottom: 22px;
   color: var(--white);
   z-index: 2;
@@ -292,6 +365,23 @@
 .hero-label span {
   font-size: 11px;
   opacity: 0.85;
+  display: block;
+}
+
+.hero-slide-name {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f6e3c2;
+  letter-spacing: 0.2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide.pan-a,
+  .hero-slide.pan-b {
+    animation: none;
+  }
 }
 
 /* Sections */
