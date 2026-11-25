@@ -24,6 +24,7 @@ export const STORAGE_KEYS = {
   itineraries: 'he_trips',
   user: 'he_user',
   lang: 'he_lang',
+  theme: 'he_theme',
 };
 
 export const DASH_PIN = '1234';

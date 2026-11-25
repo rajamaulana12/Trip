@@ -14,6 +14,7 @@ body {
   color: var(--ink);
   font: 15px/1.6 var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 img {
@@ -42,7 +43,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--teal-600);
+  outline: 2px solid var(--accent-ink);
   outline-offset: 2px;
 }
 
@@ -81,7 +82,7 @@ textarea:focus-visible {
 }
 
 .eyebrow {
-  color: var(--teal-600);
+  color: var(--accent-ink);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2.4px;

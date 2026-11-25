@@ -20,6 +20,19 @@ const initialDestinations = hydrateDestinations(
   seedDest,
 );
 
+function resolveInitialTheme() {
+  const stored = readStorage(STORAGE_KEYS.theme, null);
+  if (stored === 'dark' || stored === 'light') return stored;
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  ) {
+    return 'dark';
+  }
+  return 'light';
+}
+
 export const state = {
   data: {
     destinasi: initialDestinations,
@@ -31,6 +44,7 @@ export const state = {
   itineraries: readStorage(STORAGE_KEYS.itineraries, []),
   currentUser: readStorage(STORAGE_KEYS.user, null),
   lang: readStorage(STORAGE_KEYS.lang, 'id') === 'en' ? 'en' : 'id',
+  theme: resolveInitialTheme(),
   dashType: 'destinasi',
   dashUnlocked: false,
   editingId: null,
@@ -112,6 +126,12 @@ export function toggleLanguage() {
   notify('lang');
 }
 
+export function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  writeStorage(STORAGE_KEYS.theme, state.theme);
+  notify('theme');
+}
+
 export function resetAllDemoData() {
   state.data = {
     destinasi: clone(seedDest),
@@ -140,5 +160,6 @@ export function reloadFromStorage() {
   state.itineraries = readStorage(STORAGE_KEYS.itineraries, []);
   state.currentUser = readStorage(STORAGE_KEYS.user, null);
   state.lang = readStorage(STORAGE_KEYS.lang, 'id') === 'en' ? 'en' : 'id';
+  state.theme = resolveInitialTheme();
   notify('all');
 }

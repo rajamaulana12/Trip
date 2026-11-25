@@ -14,6 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script src="theme-init.js"></script>
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body>
@@ -32,6 +33,16 @@
         </a>
 
         <div class="nav-actions">
+          <button
+            class="icon-btn theme-toggle"
+            id="themeBtn"
+            type="button"
+            aria-label="Ganti ke tema gelap"
+            aria-pressed="false"
+            title="Ubah tema"
+          >
+            <span aria-hidden="true">☾</span>
+          </button>
           <button class="btn ghost small" id="langBtn" type="button" aria-label="Ubah bahasa">
             EN
           </button>

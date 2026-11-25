@@ -5,7 +5,7 @@
   padding: 11px 17px;
   font-weight: 700;
   background: var(--teal-600);
-  color: var(--white);
+  color: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -21,30 +21,30 @@
 }
 
 .btn.secondary {
-  background: #e1f1f1;
-  color: #086c76;
+  background: var(--btn-sec-bg);
+  color: var(--btn-sec-ink);
   box-shadow: none;
 }
 
 .btn.secondary:hover {
-  background: #d2eaea;
+  background: var(--btn-sec-hover);
 }
 
 .btn.ghost {
   background: var(--white);
-  color: var(--navy-800);
-  border: 1px solid #d5e2e7;
+  color: var(--heading);
+  border: 1px solid var(--btn-ghost-border);
   box-shadow: none;
 }
 
 .btn.ghost:hover {
-  border-color: var(--teal-600);
-  color: var(--teal-600);
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
 }
 
 .btn.danger {
   background: var(--danger-ink);
-  color: var(--white);
+  color: #ffffff;
   box-shadow: none;
 }
 
@@ -65,13 +65,20 @@
   height: 38px;
   display: inline-grid;
   place-items: center;
-  color: var(--teal-600);
+  color: var(--accent-ink);
   font-size: 18px;
   transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 
+.icon-btn.theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+}
+
 .icon-btn:hover {
-  border-color: var(--teal-600);
+  border-color: var(--accent-ink);
   background: var(--surface-tint);
 }
 
@@ -84,7 +91,7 @@
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(18, 59, 82, 0.04);
+  box-shadow: var(--shadow-sm);
   margin-bottom: 22px;
 }
 
@@ -96,15 +103,15 @@
 
 .field label {
   font-size: 11px;
-  color: #52676f;
+  color: var(--field-label);
   font-weight: 700;
 }
 
 .field input,
 .field select,
 .field textarea {
-  border: 1px solid #d7e4e8;
-  background: var(--white);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   color: var(--ink);
@@ -239,8 +246,8 @@
 }
 
 .tag {
-  background: #e2f2f1;
-  color: #08737c;
+  background: var(--tag-bg);
+  color: var(--tag-ink);
   padding: 4px 8px;
   border-radius: 6px;
   font-weight: 700;
@@ -252,7 +259,7 @@
   font-weight: 800;
   font-size: 20px;
   letter-spacing: -0.4px;
-  color: #183b4d;
+  color: var(--card-heading);
   margin: 10px 0 6px;
 }
 
@@ -267,14 +274,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #eef1ed;
+  border-top: 1px solid var(--divider);
   padding-top: 12px;
   font-size: 12px;
 }
 
 .price {
   font-weight: 800;
-  color: var(--teal-600);
+  color: var(--accent-ink);
 }
 
 .card-actions {
@@ -343,7 +350,7 @@
   padding: 35px;
   text-align: center;
   background: var(--white);
-  border: 1px dashed #cbd9d0;
+  border: 1px dashed var(--line-strong);
   border-radius: var(--radius-lg);
   color: var(--muted);
   grid-column: 1 / -1;
@@ -361,14 +368,14 @@
   font-size: clamp(28px, 3vw, 38px);
   font-weight: 800;
   letter-spacing: -1px;
-  color: var(--navy-800);
+  color: var(--heading);
   margin: 8px 0 12px;
   line-height: 1.12;
 }
 
 .mapbox {
-  background: #e7f2f2;
-  border: 1px solid #d1e5e5;
+  background: var(--mapbox-bg);
+  border: 1px solid var(--mapbox-border);
   border-radius: var(--radius-md);
   padding: 18px;
   min-height: 320px;
@@ -381,12 +388,34 @@
   display: block;
 }
 
+.map-land {
+  fill: var(--map-land);
+  stroke: var(--map-land-stroke);
+}
+
+.map-river {
+  stroke: var(--map-river);
+}
+
+.map-dots {
+  fill: var(--map-dot);
+  stroke: var(--map-dot-stroke);
+}
+
+.map-labels {
+  fill: var(--map-label);
+}
+
+.map-note {
+  fill: var(--map-note);
+}
+
 .map-legend {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   font-size: 11px;
-  color: #63766e;
+  color: var(--muted);
   margin-top: 10px;
 }
 
@@ -395,7 +424,7 @@
   height: 9px;
   display: inline-block;
   border-radius: 50%;
-  background: var(--teal-600);
+  background: var(--accent-ink);
   margin-right: 5px;
 }
 
@@ -412,7 +441,7 @@
 .panel h3 {
   font-weight: 800;
   font-size: 24px;
-  color: var(--navy-800);
+  color: var(--heading);
   margin: 6px 0 12px;
 }
 
@@ -436,7 +465,7 @@
 
 .mini b {
   display: block;
-  color: var(--teal-600);
+  color: var(--accent-ink);
   font-size: 13px;
 }
 
@@ -463,7 +492,7 @@
 
 .day-block h4 {
   margin: 0 0 6px;
-  color: var(--navy-800);
+  color: var(--heading);
   font-size: 13px;
 }
 
@@ -490,7 +519,7 @@
 .saved-trips-box h4 {
   margin: 0 0 8px;
   font-size: 13px;
-  color: var(--navy-800);
+  color: var(--heading);
 }
 
 .saved-trip-item {
@@ -509,7 +538,7 @@
 .budget-total {
   font-weight: 800;
   font-size: 34px;
-  color: var(--teal-600);
+  color: var(--accent-ink);
   margin: 8px 0;
 }
 
@@ -526,9 +555,9 @@
 }
 
 .notice {
-  background: #fff7e7;
-  border: 1px solid #f1dfb8;
-  color: #76531b;
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-border);
+  color: var(--notice-ink);
   border-radius: var(--radius-md);
   padding: 12px;
   font-size: 11px;
@@ -564,7 +593,7 @@
   font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.8px;
-  color: var(--navy-800);
+  color: var(--heading);
   margin: 8px 0 6px;
 }
 
@@ -600,7 +629,7 @@
 }
 
 .dash-side {
-  background: var(--navy-800);
+  background: var(--dash-side-bg);
   border-radius: var(--radius-md);
   padding: 16px;
   color: #e7f5ef;
@@ -623,7 +652,7 @@
 .dash-side button.active,
 .dash-side button:hover {
   background: rgba(255, 255, 255, 0.16);
-  color: var(--white);
+  color: #ffffff;
 }
 
 .dash-main {
@@ -646,7 +675,7 @@
 .dash-head h3 {
   font-size: 24px;
   font-weight: 800;
-  color: var(--navy-800);
+  color: var(--heading);
   margin: 0;
 }
 
@@ -669,8 +698,8 @@ td {
 }
 
 th {
-  color: #64766e;
-  background: #f7faf7;
+  color: var(--table-head-ink);
+  background: var(--table-head-bg);
 }
 
 /* Modals & Auth Dialog */
@@ -678,7 +707,7 @@ th {
 .auth-page {
   position: fixed;
   inset: 0;
-  background: rgba(16, 47, 67, 0.72);
+  background: rgba(8, 20, 29, 0.74);
   backdrop-filter: blur(5px);
   z-index: 50;
   display: none;
@@ -696,6 +725,7 @@ th {
 .auth-card {
   position: relative;
   background: var(--white);
+  border: 1px solid var(--line);
   border-radius: 14px;
   padding: 24px;
   width: min(600px, 100%);
@@ -713,7 +743,7 @@ th {
   font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.8px;
-  color: var(--navy-800);
+  color: var(--heading);
   margin: 8px 0 6px;
 }
 
@@ -727,7 +757,7 @@ th {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e4ecef;
+  border-bottom: 1px solid var(--line);
   padding-bottom: 12px;
   margin-bottom: 14px;
 }
@@ -735,7 +765,7 @@ th {
 .modal-top h3 {
   font-size: 24px;
   font-weight: 800;
-  color: var(--navy-800);
+  color: var(--heading);
   margin: 0;
 }
 
@@ -787,8 +817,8 @@ th {
 }
 
 .toast {
-  background: var(--navy-900);
-  color: var(--white);
+  background: var(--toast-bg);
+  color: var(--toast-ink);
   padding: 12px 16px;
   border-radius: var(--radius-md);
   font-size: 13px;

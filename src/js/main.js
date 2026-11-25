@@ -6,6 +6,7 @@ import { initFoodAndStay, renderFood, renderStays } from './components/foodAndSt
 import { initHeroSlideshow, renderHeroSlideshow } from './components/heroSlideshow.js';
 import { initModalHandlers } from './components/modals.js';
 import { initPackages } from './components/packages.js';
+import { applyTheme, initTheme } from './components/theme.js';
 import {
   calculateBudget,
   initPlanner,
@@ -81,6 +82,7 @@ function renderAll() {
 }
 
 function bootstrap() {
+  initTheme();
   initModalHandlers();
   initMobileNav();
   initHeroSlideshow();
@@ -102,6 +104,9 @@ function bootstrap() {
   subscribe((topic) => {
     if (topic === 'lang') {
       applyLanguage();
+      applyTheme();
+    } else if (topic === 'theme') {
+      applyTheme();
     } else if (topic === 'auth') {
       syncUserUI();
     } else if (topic === 'favorites') {
@@ -111,6 +116,7 @@ function bootstrap() {
     } else if (topic === 'itineraries') {
       renderSavedTrips();
     } else {
+      applyTheme();
       renderAll();
     }
   });

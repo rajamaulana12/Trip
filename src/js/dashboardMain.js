@@ -1,6 +1,7 @@
 import { TRANSLATIONS } from './config/constants.js';
 import { initDashboard, renderDashboard } from './components/dashboard.js';
 import { initModalHandlers } from './components/modals.js';
+import { applyTheme, initTheme } from './components/theme.js';
 import {
   reloadFromStorage,
   state,
@@ -26,6 +27,7 @@ function applyLanguage() {
 }
 
 function bootstrapDashboard() {
+  initTheme();
   initModalHandlers();
   initDashboard();
 
@@ -40,8 +42,12 @@ function bootstrapDashboard() {
   subscribe((topic) => {
     if (topic === 'lang') {
       applyLanguage();
+      applyTheme();
+    } else if (topic === 'theme') {
+      applyTheme();
     } else {
       applyLanguage();
+      applyTheme();
       renderDashboard();
     }
   });
