@@ -60,6 +60,46 @@ function initMobileNav() {
   });
 }
 
+function cleanUrlBar() {
+  if (typeof window === 'undefined' || !window.history?.replaceState) return;
+  const cleanPath =
+    window.location.pathname.replace(/\/index\.html$/i, '/') || '/';
+  const nextUrl = cleanPath + (window.location.search || '');
+  if (window.location.pathname + window.location.search + window.location.hash !== nextUrl) {
+    window.history.replaceState(null, '', nextUrl);
+  }
+}
+
+function initCleanNavigation() {
+  if (
+    window.location.pathname.endsWith('/index.html') ||
+    window.location.hash === '#home'
+  ) {
+    cleanUrlBar();
+  }
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+
+    const href = link.getAttribute('href') || '';
+    if (link.hasAttribute('data-scroll-home') || href === '#home') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      cleanUrlBar();
+      return;
+    }
+
+    if (href.startsWith('#') && href.length > 1) {
+      const target = document.getElementById(href.slice(1));
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+      cleanUrlBar();
+    }
+  });
+}
+
 function safeRun(fn) {
   try {
     fn();
@@ -82,6 +122,7 @@ function renderAll() {
 }
 
 function bootstrap() {
+  initCleanNavigation();
   initTheme();
   initModalHandlers();
   initMobileNav();
