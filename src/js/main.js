@@ -1,6 +1,5 @@
 import { TRANSLATIONS } from './config/constants.js';
 import { initAuth, syncUserUI } from './components/auth.js';
-import { initDashboard, renderDashboard } from './components/dashboard.js';
 import { initDestinationsSection, renderDestinations } from './components/destinations.js';
 import { initFavorites, renderFavorites } from './components/favorites.js';
 import { initFoodAndStay, renderFood, renderStays } from './components/foodAndStay.js';
@@ -13,7 +12,12 @@ import {
   renderSavedTrips,
   updateDayOptions,
 } from './components/planner.js';
-import { state, subscribe, toggleLanguage } from './state/store.js';
+import {
+  reloadFromStorage,
+  state,
+  subscribe,
+  toggleLanguage,
+} from './state/store.js';
 
 function applyLanguage() {
   const t = TRANSLATIONS[state.lang];
@@ -69,7 +73,6 @@ function renderAll() {
   safeRun(renderStays);
   safeRun(renderFavorites);
   safeRun(renderSavedTrips);
-  safeRun(renderDashboard);
   safeRun(updateDayOptions);
   safeRun(() => calculateBudget(true));
   safeRun(renderItinerary);
@@ -84,10 +87,13 @@ function bootstrap() {
   initPlanner();
   initPackages();
   initFavorites();
-  initDashboard();
 
   document.getElementById('langBtn')?.addEventListener('click', () => {
     toggleLanguage();
+  });
+
+  window.addEventListener('storage', () => {
+    reloadFromStorage();
   });
 
   subscribe((topic) => {

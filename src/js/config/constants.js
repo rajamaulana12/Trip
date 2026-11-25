@@ -56,6 +56,9 @@ export const TRANSLATIONS = {
     packageTitle: 'Rekomendasi paket wisata',
     favTitle: 'Destinasi favorit',
     dashTitle: 'Dashboard pengelola',
+    dashSubtitle:
+      'Area pengelola dilindungi PIN demo. Data tersimpan lokal di browser ini.',
+    backHome: '← Kembali ke Beranda',
   },
   en: {
     topLeft: '✦ Explore Aceh with comfort and peace of mind',
@@ -83,5 +86,8 @@ export const TRANSLATIONS = {
     packageTitle: 'Curated tour packages',
     favTitle: 'Saved favourites',
     dashTitle: 'Manager dashboard',
+    dashSubtitle:
+      'Manager area protected by a demo PIN. Data is stored locally in this browser.',
+    backHome: '← Back to Home',
   },
 };

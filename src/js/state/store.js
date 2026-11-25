@@ -125,3 +125,20 @@ export function resetAllDemoData() {
   persistCatalog();
   notify('all');
 }
+
+export function reloadFromStorage() {
+  state.data = {
+    destinasi: hydrateDestinations(
+      readStorage(STORAGE_KEYS.destinations, seedDest),
+      seedDest,
+    ),
+    kuliner: readStorage(STORAGE_KEYS.foods, seedFood),
+    akomodasi: readStorage(STORAGE_KEYS.stays, seedStay),
+    paket: readStorage(STORAGE_KEYS.packages, seedPackages),
+  };
+  state.favorites = readStorage(STORAGE_KEYS.favorites, []);
+  state.itineraries = readStorage(STORAGE_KEYS.itineraries, []);
+  state.currentUser = readStorage(STORAGE_KEYS.user, null);
+  state.lang = readStorage(STORAGE_KEYS.lang, 'id') === 'en' ? 'en' : 'id';
+  notify('all');
+}

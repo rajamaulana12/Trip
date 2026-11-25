@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Pengelola — Aceh Trip</title>
+    <meta
+      name="description"
+      content="Dashboard pengelola konten Aceh Trip untuk mengelola destinasi, kuliner, akomodasi, dan paket wisata."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="wrap topbar-inner">
+        <span data-i18n="topLeft">✦ Jelajahi Aceh dengan nyaman dan penuh makna</span>
+        <span id="topNote" data-i18n="topNote">Data demo · Informasi perlu diverifikasi</span>
+      </div>
+    </div>
+
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true">✺</span>
+          <span>Aceh Trip · Dashboard</span>
+        </a>
+
+        <div class="nav-actions">
+          <button class="btn ghost small" id="langBtn" type="button" aria-label="Ubah bahasa">
+            EN
+          </button>
+          <a class="btn secondary small" href="index.html" data-i18n="backHome">
+            ← Kembali ke Beranda
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" id="dashboard" style="min-height: calc(100vh - 220px);">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">LOCAL DEMO CMS</p>
+              <h1 class="region-title" data-i18n="dashTitle" style="margin-top: 6px;">
+                Dashboard pengelola
+              </h1>
+              <p data-i18n="dashSubtitle">
+                Area pengelola dilindungi PIN demo. Data tersimpan lokal di
+                browser ini.
+              </p>
+            </div>
+            <div class="card-actions">
+              <button class="btn ghost small hidden" id="lockDash" type="button">
+                Kunci dashboard
+              </button>
+              <button class="btn ghost small hidden" id="resetData" type="button">
+                Reset data demo
+              </button>
+              <div class="card-actions hidden" id="resetDataConfirm">
+                <button class="btn danger small" id="resetDataYes" type="button">
+                  Ya, reset demo
+                </button>
+                <button
+                  class="btn ghost small"
+                  id="resetDataCancel"
+                  type="button"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="login-gate" id="dashLogin">
+            <p class="eyebrow">AREA PENGELOLA</p>
+            <h3>Masuk ke dashboard</h3>
+            <p>
+              Masukkan PIN untuk mengelola destinasi, kuliner, akomodasi, dan
+              paket wisata.
+            </p>
+            <form id="dashLoginForm" novalidate>
+              <div class="field">
+                <label for="dashPin">PIN pengelola</label>
+                <input
+                  id="dashPin"
+                  class="pin-input"
+                  name="pin"
+                  type="password"
+                  inputmode="numeric"
+                  autocomplete="current-password"
+                  maxlength="12"
+                  placeholder="••••"
+                  required
+                />
+              </div>
+              <div
+                class="form-msg"
+                id="dashPinMsg"
+                role="status"
+                aria-live="polite"
+              ></div>
+              <button class="btn" type="submit" style="width: 100%;">
+                Buka dashboard
+              </button>
+            </form>
+            <p style="font-size: 11px; margin: 14px 0 0;">
+              PIN demo: 1234 · Proteksi ini hanya simulasi di browser, bukan
+              keamanan sungguhan.
+            </p>
+          </div>
+
+          <div class="dash" id="dashContent" hidden>
+            <aside class="dash-side" id="dashTabs" aria-label="Menu dashboard">
+              <button class="active" type="button" data-type="destinasi">
+                Destinasi
+              </button>
+              <button type="button" data-type="kuliner">Kuliner</button>
+              <button type="button" data-type="akomodasi">Akomodasi</button>
+              <button type="button" data-type="paket">Paket wisata</button>
+            </aside>
+
+            <div class="dash-main">
+              <div class="dash-head">
+                <h3 id="dashTitle">Kelola Destinasi</h3>
+                <button class="btn small" id="addRecord" type="button">
+                  ＋ Tambah data
+                </button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead id="dashHead"></thead>
+                  <tbody id="dashBody"></tbody>
+                </table>
+              </div>
+              <p class="muted" style="font-size: 11px; margin-bottom: 0;">
+                Perubahan disimpan pada localStorage browser. Jangan masukkan
+                data pribadi atau data usaha nyata tanpa izin.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <div>
+          <div class="brand footer-brand">
+            <span class="brand-mark footer-brand-mark" aria-hidden="true">✺</span>
+            <span>Aceh Trip</span>
+          </div>
+          <p class="footer-desc">
+            Area pengelolaan konten lokal untuk katalog destinasi, kuliner,
+            akomodasi, dan paket wisata Aceh.
+          </p>
+        </div>
+        <div>
+          <b>Informasi demo</b>
+          <p style="max-width: 320px; margin: 6px 0 0;">
+            <small>
+              Perubahan yang disimpan di halaman ini otomatis tampil pada halaman
+              utama di browser yang sama.
+            </small>
+          </p>
+        </div>
+        <div>
+          <small>© 2026 Aceh Trip · Dashboard Pengelola</small>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Add/Edit CMS Modal -->
+    <div
+      class="modal"
+      id="editModal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="editTitle"
+    >
+      <div class="modal-box">
+        <div class="modal-top">
+          <h3 id="editTitle">Tambah data</h3>
+          <button
+            class="icon-btn"
+            type="button"
+            data-close="editModal"
+            aria-label="Tutup formulir"
+          >
+            ×
+          </button>
+        </div>
+        <form id="editForm">
+          <div id="editFields" class="modal-grid"></div>
+          <div id="imageUploadArea" class="field full" style="margin: 0 0 16px;">
+            <label for="recordImage"
+              >Foto destinasi, kuliner, atau akomodasi</label
+            >
+            <input id="recordImage" type="file" accept="image/*" />
+            <span class="upload-hint">
+              Pilih JPG, PNG, atau WEBP. Gambar akan diperkecil otomatis dan
+              disimpan di browser ini.
+            </span>
+            <img
+              id="imagePreview"
+              class="upload-preview hidden"
+              alt="Pratinjau foto"
+            />
+          </div>
+          <div class="card-actions" style="justify-content: flex-end;">
+            <button type="button" class="btn ghost" data-close="editModal">
+              Batal
+            </button>
+            <button class="btn" type="submit">Simpan data</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Non-blocking Toast Stack -->
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+    <script type="module" src="/src/js/dashboardMain.js"></script>
+  </body>
+</html>
