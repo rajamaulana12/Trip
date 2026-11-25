@@ -240,6 +240,15 @@ export function initPlanner() {
     .getElementById('recalc')
     ?.addEventListener('click', () => calculateBudget(true));
 
+  document.getElementById('resetBudget')?.addEventListener('click', () => {
+    ['mealCost', 'stayCost', 'transportCost', 'extraCost'].forEach((id) => {
+      const input = document.getElementById(id);
+      if (input) input.value = '';
+    });
+    calculateBudget(true);
+    showToast('Kalkulator anggaran direset.');
+  });
+
   ['travellers', 'mealCost', 'stayCost', 'transportCost', 'extraCost', 'tripDays'].forEach(
     (id) => {
       document

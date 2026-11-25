@@ -33,7 +33,6 @@ export const SAFE_URL_FALLBACK = 'https://www.google.com/maps';
 export const TRANSLATIONS = {
   id: {
     topLeft: '✦ Jelajahi Aceh dengan nyaman dan penuh makna',
-    topNote: 'Data demo · Informasi perlu diverifikasi',
     navDest: 'Destinasi',
     navFood: 'Kuliner',
     navStay: 'Akomodasi',
@@ -63,7 +62,6 @@ export const TRANSLATIONS = {
   },
   en: {
     topLeft: '✦ Explore Aceh with comfort and peace of mind',
-    topNote: 'Demo data · Information requires verification',
     navDest: 'Destinations',
     navFood: 'Food',
     navStay: 'Stays',

@@ -28,7 +28,6 @@
     <div class="topbar">
       <div class="wrap topbar-inner">
         <span data-i18n="topLeft">✦ Jelajahi Aceh dengan nyaman dan penuh makna</span>
-        <span id="topNote" data-i18n="topNote">Data demo · Informasi perlu diverifikasi</span>
       </div>
     </div>
 
@@ -396,24 +395,43 @@
               <div class="inline-fields">
                 <div class="field">
                   <label for="mealCost">Biaya makan / orang / hari (Rp)</label>
-                  <input id="mealCost" type="number" value="100000" min="0" />
+                  <input
+                    id="mealCost"
+                    type="number"
+                    value=""
+                    placeholder="0"
+                    min="0"
+                  />
                 </div>
                 <div class="field">
                   <label for="stayCost">Akomodasi / malam (Rp)</label>
-                  <input id="stayCost" type="number" value="350000" min="0" />
+                  <input
+                    id="stayCost"
+                    type="number"
+                    value=""
+                    placeholder="0"
+                    min="0"
+                  />
                 </div>
                 <div class="field">
                   <label for="transportCost">Transportasi total (Rp)</label>
                   <input
                     id="transportCost"
                     type="number"
-                    value="500000"
+                    value=""
+                    placeholder="0"
                     min="0"
                   />
                 </div>
                 <div class="field">
                   <label for="extraCost">Biaya aktivitas tambahan (Rp)</label>
-                  <input id="extraCost" type="number" value="150000" min="0" />
+                  <input
+                    id="extraCost"
+                    type="number"
+                    value=""
+                    placeholder="0"
+                    min="0"
+                  />
                 </div>
               </div>
 
@@ -427,14 +445,14 @@
               </div>
               <div class="budget-total tabular" id="budgetTotal">Rp 0</div>
               <div id="budgetBreakdown"></div>
-              <button
-                class="btn ghost small"
-                id="recalc"
-                type="button"
-                style="margin-top: 14px;"
-              >
-                Hitung ulang
-              </button>
+              <div class="card-actions" style="margin-top: 14px;">
+                <button class="btn ghost small" id="recalc" type="button">
+                  Hitung ulang
+                </button>
+                <button class="btn ghost small" id="resetBudget" type="button">
+                  Reset anggaran
+                </button>
+              </div>
             </div>
           </div>
         </div>
