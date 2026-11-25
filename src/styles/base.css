@@ -59,6 +59,7 @@ textarea:focus-visible {
   color: var(--muted);
 }
 
+[hidden],
 .hidden {
   display: none !important;
 }
