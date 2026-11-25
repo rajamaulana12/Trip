@@ -59,6 +59,13 @@ export const TRANSLATIONS = {
     dashSubtitle:
       'Area pengelola dilindungi PIN demo. Data tersimpan lokal di browser ini.',
     backHome: '← Kembali ke Beranda',
+    loginEyebrow: 'AKUN PENGUNJUNG',
+    loginTitle: 'Masuk dengan Google',
+    loginSubtitle:
+      'Pilih akun Google untuk menyimpan favorit dan rencana perjalananmu.',
+    loginGoogleBtn: 'Lanjutkan dengan Google',
+    loginNote:
+      'Autentikasi aman melalui Google & Firebase. Data favorit dan itinerary tersinkron ke akunmu.',
   },
   en: {
     topLeft: '✦ Explore Aceh with comfort and peace of mind',
@@ -88,5 +95,12 @@ export const TRANSLATIONS = {
     dashSubtitle:
       'Manager area protected by a demo PIN. Data is stored locally in this browser.',
     backHome: '← Back to Home',
+    loginEyebrow: 'VISITOR ACCOUNT',
+    loginTitle: 'Sign in with Google',
+    loginSubtitle:
+      'Choose a Google account to save your favourites and travel itineraries.',
+    loginGoogleBtn: 'Continue with Google',
+    loginNote:
+      'Secured with Google & Firebase Authentication. Your favourites and itineraries sync to your account.',
   },
 };

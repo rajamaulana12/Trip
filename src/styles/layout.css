@@ -80,13 +80,35 @@
 }
 
 .user-chip {
-  max-width: 170px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 190px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 11px;
   color: var(--nav-link);
   font-weight: 600;
+}
+
+.user-chip[hidden] {
+  display: none;
+}
+
+.user-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-chip-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
 }
 
 .menu-toggle {

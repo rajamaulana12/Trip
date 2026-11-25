@@ -1,7 +1,7 @@
 import {
+  deleteItinerary,
   destById,
-  notify,
-  persistCatalog,
+  saveItinerary,
   state,
 } from '../state/store.js';
 import { clone, esc, rupiah } from '../utils/format.js';
@@ -193,13 +193,15 @@ export function initPlanner() {
       createdBy: state.currentUser || null,
     };
 
-    state.itineraries.push(trip);
-    persistCatalog();
-    notify('itineraries');
+    saveItinerary(trip).catch((err) => {
+      console.error(err);
+    });
 
     const savedNote = document.getElementById('tripSaved');
     if (savedNote) {
-      savedNote.textContent = 'Tersimpan di browser ✓';
+      savedNote.textContent = state.authUser
+        ? 'Tersimpan di akun Google ✓'
+        : 'Tersimpan di browser ✓';
       window.setTimeout(() => {
         savedNote.textContent = '';
       }, 3000);
@@ -215,9 +217,9 @@ export function initPlanner() {
     if (!id) return;
 
     if (action === 'delete-trip') {
-      state.itineraries = state.itineraries.filter((t) => t.id !== id);
-      persistCatalog();
-      notify('itineraries');
+      deleteItinerary(id).catch((err) => {
+        console.error(err);
+      });
       showToast('Rencana tersimpan dihapus.');
     } else if (action === 'load-trip') {
       const trip = state.itineraries.find((t) => t.id === id);

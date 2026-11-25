@@ -6,6 +6,13 @@ import {
   seedStay,
 } from '../data/seed.js';
 import {
+  addUserFavorite,
+  clearUserFavorites,
+  deleteUserItinerary,
+  removeUserFavorite,
+  saveUserItinerary,
+} from '../services/firebase.js';
+import {
   hydrateDestinations,
   readStorage,
   removeStorage,
@@ -43,6 +50,7 @@ export const state = {
   favorites: readStorage(STORAGE_KEYS.favorites, []),
   itineraries: readStorage(STORAGE_KEYS.itineraries, []),
   currentUser: readStorage(STORAGE_KEYS.user, null),
+  authUser: null,
   lang: readStorage(STORAGE_KEYS.lang, 'id') === 'en' ? 'en' : 'id',
   theme: resolveInitialTheme(),
   dashType: 'destinasi',
@@ -73,8 +81,10 @@ export function persistCatalog() {
   writeStorage(STORAGE_KEYS.foods, state.data.kuliner);
   writeStorage(STORAGE_KEYS.stays, state.data.akomodasi);
   writeStorage(STORAGE_KEYS.packages, state.data.paket);
-  writeStorage(STORAGE_KEYS.favorites, state.favorites);
-  writeStorage(STORAGE_KEYS.itineraries, state.itineraries);
+  if (!state.authUser) {
+    writeStorage(STORAGE_KEYS.favorites, state.favorites);
+    writeStorage(STORAGE_KEYS.itineraries, state.itineraries);
+  }
 }
 
 export function destById(id) {
@@ -88,26 +98,115 @@ export function isFav(id, type = 'destinasi') {
 }
 
 export function toggleFav(id, type = 'destinasi') {
-  if (isFav(id, type)) {
+  const uid = state.authUser?.uid;
+  const currentlyFav = isFav(id, type);
+
+  if (currentlyFav) {
     state.favorites = state.favorites.filter(
       (f) => !(f.itemId === id && f.tipeItem === type),
     );
   } else {
     state.favorites.push({
-      id: 'fav-' + Date.now(),
+      id: `${type}_${id}`,
       itemId: id,
       tipeItem: type,
       tanggalDitambahkan: new Date().toISOString(),
     });
   }
+
+  if (uid) {
+    notify('favorites');
+    if (currentlyFav) {
+      removeUserFavorite(uid, id, type).catch((err) => {
+        console.error(err);
+      });
+    } else {
+      addUserFavorite(uid, id, type).catch((err) => {
+        console.error(err);
+      });
+    }
+    return;
+  }
+
   persistCatalog();
   notify('favorites');
 }
 
 export function clearFavorites() {
+  const uid = state.authUser?.uid;
+  const previous = [...state.favorites];
   state.favorites = [];
+
+  if (uid) {
+    notify('favorites');
+    if (previous.length) {
+      clearUserFavorites(uid, previous).catch((err) => {
+        console.error(err);
+      });
+    }
+    return;
+  }
+
   persistCatalog();
   notify('favorites');
+}
+
+export function saveItinerary(trip) {
+  const uid = state.authUser?.uid;
+  if (uid) {
+    const nextTrip = {
+      ...trip,
+      createdBy: state.authUser.email || state.currentUser || '',
+    };
+    state.itineraries = [...state.itineraries, nextTrip];
+    notify('itineraries');
+    return saveUserItinerary(uid, nextTrip);
+  }
+
+  state.itineraries.push(trip);
+  persistCatalog();
+  notify('itineraries');
+  return Promise.resolve();
+}
+
+export function deleteItinerary(id) {
+  const uid = state.authUser?.uid;
+  state.itineraries = state.itineraries.filter((t) => t.id !== id);
+
+  if (uid) {
+    notify('itineraries');
+    return deleteUserItinerary(uid, id);
+  }
+
+  persistCatalog();
+  notify('itineraries');
+  return Promise.resolve();
+}
+
+export function setSyncedFavorites(items) {
+  state.favorites = items;
+  notify('favorites');
+}
+
+export function setSyncedItineraries(items) {
+  state.itineraries = items;
+  notify('itineraries');
+}
+
+export function setAuthUser(user) {
+  state.authUser = user;
+  if (user) {
+    const label = user.email || user.displayName || user.uid;
+    state.currentUser = label;
+    writeStorage(STORAGE_KEYS.user, label);
+    notify('auth');
+  } else {
+    state.currentUser = null;
+    removeStorage(STORAGE_KEYS.user);
+    state.favorites = readStorage(STORAGE_KEYS.favorites, []);
+    state.itineraries = readStorage(STORAGE_KEYS.itineraries, []);
+    notify('all');
+  }
 }
 
 export function setCurrentUser(email) {
@@ -156,9 +255,11 @@ export function reloadFromStorage() {
     akomodasi: readStorage(STORAGE_KEYS.stays, seedStay),
     paket: readStorage(STORAGE_KEYS.packages, seedPackages),
   };
-  state.favorites = readStorage(STORAGE_KEYS.favorites, []);
-  state.itineraries = readStorage(STORAGE_KEYS.itineraries, []);
-  state.currentUser = readStorage(STORAGE_KEYS.user, null);
+  if (!state.authUser) {
+    state.favorites = readStorage(STORAGE_KEYS.favorites, []);
+    state.itineraries = readStorage(STORAGE_KEYS.itineraries, []);
+    state.currentUser = readStorage(STORAGE_KEYS.user, null);
+  }
   state.lang = readStorage(STORAGE_KEYS.lang, 'id') === 'en' ? 'en' : 'id';
   state.theme = resolveInitialTheme();
   notify('all');

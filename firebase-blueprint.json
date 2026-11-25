@@ -1,0 +1,161 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated Google user profile stored privately under the user's own document.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID matching the document ID."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 3,
+          "maxLength": 254,
+          "description": "Verified Google account email address."
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Display name from Google account."
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 512,
+          "description": "Optional avatar URL from Google account."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last profile sync."
+        }
+      },
+      "required": ["uid", "email", "displayName", "updatedAt"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "A user's saved favorite destination or culinary item.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Owner Firebase Auth UID."
+        },
+        "itemId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Catalog ID of the favorited destination or food item."
+        },
+        "tipeItem": {
+          "type": "string",
+          "enum": ["destinasi", "kuliner"],
+          "description": "Item category."
+        },
+        "tanggalDitambahkan": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 40,
+          "description": "ISO timestamp when favorite was added."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when favorite was created."
+        }
+      },
+      "required": ["uid", "itemId", "tipeItem", "tanggalDitambahkan", "createdAt"]
+    },
+    "Itinerary": {
+      "title": "Itinerary",
+      "description": "A user's saved Aceh travel itinerary and estimated budget.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Owner Firebase Auth UID."
+        },
+        "namaPerjalanan": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Trip title."
+        },
+        "tanggalMulai": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Planned start date (YYYY-MM-DD or empty)."
+        },
+        "jumlahHari": {
+          "type": "number",
+          "description": "Number of trip days (1-5)."
+        },
+        "jumlahWisatawan": {
+          "type": "number",
+          "description": "Number of travellers (1-100)."
+        },
+        "daftarAktivitas": {
+          "type": "array",
+          "description": "Bounded list of planned destination activities (max 50)."
+        },
+        "totalAnggaran": {
+          "type": "number",
+          "description": "Calculated estimated trip budget in IDR."
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 254,
+          "description": "Email of creator."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update."
+        }
+      },
+      "required": [
+        "uid",
+        "namaPerjalanan",
+        "tanggalMulai",
+        "jumlahHari",
+        "jumlahWisatawan",
+        "daftarAktivitas",
+        "totalAnggaran",
+        "createdBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profile document owned by userId."
+    },
+    "/users/{userId}/favorites/{favId}": {
+      "schema": { "$ref": "#/entities/Favorite" },
+      "description": "User's favorite destinations and culinary items."
+    },
+    "/users/{userId}/itineraries/{tripId}": {
+      "schema": { "$ref": "#/entities/Itinerary" },
+      "description": "User's saved trip itineraries."
+    }
+  }
+}

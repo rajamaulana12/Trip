@@ -1,0 +1,187 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'email', 'displayName', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'email', 'displayName', 'photoURL', 'updatedAt'])
+        && data.uid is string
+        && data.uid == userId
+        && data.uid == request.auth.uid
+        && data.uid.size() >= 1
+        && data.uid.size() <= 128
+        && data.email is string
+        && data.email.size() >= 3
+        && data.email.size() <= 254
+        && data.displayName is string
+        && data.displayName.size() <= 120
+        && (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 512))
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidFavorite(data, userId) {
+      return data.keys().hasAll(['uid', 'itemId', 'tipeItem', 'tanggalDitambahkan', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'itemId', 'tipeItem', 'tanggalDitambahkan', 'createdAt'])
+        && data.uid is string
+        && data.uid == userId
+        && data.uid == request.auth.uid
+        && data.uid.size() >= 1
+        && data.uid.size() <= 128
+        && data.itemId is string
+        && data.itemId.size() >= 1
+        && data.itemId.size() <= 128
+        && data.itemId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.tipeItem is string
+        && data.tipeItem in ['destinasi', 'kuliner']
+        && data.tanggalDitambahkan is string
+        && data.tanggalDitambahkan.size() >= 10
+        && data.tanggalDitambahkan.size() <= 40
+        && data.createdAt is timestamp;
+    }
+
+    function isValidItinerary(data, userId) {
+      return data.keys().hasAll([
+          'uid',
+          'namaPerjalanan',
+          'tanggalMulai',
+          'jumlahHari',
+          'jumlahWisatawan',
+          'daftarAktivitas',
+          'totalAnggaran',
+          'createdBy',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid',
+          'namaPerjalanan',
+          'tanggalMulai',
+          'jumlahHari',
+          'jumlahWisatawan',
+          'daftarAktivitas',
+          'totalAnggaran',
+          'createdBy',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.uid is string
+        && data.uid == userId
+        && data.uid == request.auth.uid
+        && data.uid.size() >= 1
+        && data.uid.size() <= 128
+        && data.namaPerjalanan is string
+        && data.namaPerjalanan.size() >= 1
+        && data.namaPerjalanan.size() <= 120
+        && data.tanggalMulai is string
+        && data.tanggalMulai.size() <= 20
+        && data.jumlahHari is number
+        && data.jumlahHari >= 1
+        && data.jumlahHari <= 5
+        && data.jumlahWisatawan is number
+        && data.jumlahWisatawan >= 1
+        && data.jumlahWisatawan <= 100
+        && data.daftarAktivitas is list
+        && data.daftarAktivitas.size() <= 50
+        && (data.daftarAktivitas.size() == 0 || data.daftarAktivitas[0] is map)
+        && data.totalAnggaran is number
+        && data.totalAnggaran >= 0
+        && data.totalAnggaran <= 1000000000
+        && data.createdBy is string
+        && data.createdBy.size() <= 254
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+      allow create: if isEmailVerified()
+        && isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().updatedAt == request.time;
+      allow update: if isEmailVerified()
+        && isOwner(userId)
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['email', 'displayName', 'photoURL', 'updatedAt']);
+      allow delete: if false;
+
+      match /favorites/{favId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(favId);
+        allow list: if isOwner(userId) && resource.data.uid == request.auth.uid;
+        allow create: if isEmailVerified()
+          && isOwner(userId)
+          && isValidId(userId)
+          && isValidId(favId)
+          && isValidFavorite(incoming(), userId)
+          && incoming().createdAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId));
+        allow update: if false;
+        allow delete: if isEmailVerified() && isOwner(userId) && isValidId(userId) && isValidId(favId);
+      }
+
+      match /itineraries/{tripId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(tripId);
+        allow list: if isOwner(userId) && resource.data.uid == request.auth.uid;
+        allow create: if isEmailVerified()
+          && isOwner(userId)
+          && isValidId(userId)
+          && isValidId(tripId)
+          && isValidItinerary(incoming(), userId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId));
+        allow update: if isEmailVerified()
+          && isOwner(userId)
+          && isValidId(userId)
+          && isValidId(tripId)
+          && isValidItinerary(incoming(), userId)
+          && incoming().uid == existing().uid
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId))
+          && incoming().diff(existing()).affectedKeys().hasOnly([
+            'namaPerjalanan',
+            'tanggalMulai',
+            'jumlahHari',
+            'jumlahWisatawan',
+            'daftarAktivitas',
+            'totalAnggaran',
+            'updatedAt'
+          ]);
+        allow delete: if isEmailVerified() && isOwner(userId) && isValidId(userId) && isValidId(tripId);
+      }
+    }
+  }
+}

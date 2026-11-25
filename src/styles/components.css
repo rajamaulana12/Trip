@@ -801,6 +801,38 @@ th {
   right: 14px;
 }
 
+.google-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: var(--input-bg);
+  color: var(--heading);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.google-btn:hover:not(:disabled) {
+  border-color: var(--accent-ink);
+  background: var(--surface-tint);
+  transform: translateY(-1px);
+}
+
+.google-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.google-btn-icon {
+  flex-shrink: 0;
+}
+
 .modal-top {
   display: flex;
   justify-content: space-between;
