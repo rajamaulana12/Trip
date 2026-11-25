@@ -2,5 +2,7 @@
   "name": "Aceh Trip",
   "description": "Aceh Trip — jelajahi destinasi, kuliner, dan akomodasi ramah Muslim di Aceh.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

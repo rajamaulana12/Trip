@@ -26,9 +26,21 @@ import type {
 } from './types/aceh';
 
 export default function App() {
-  const [destinations, setDestinations] = useState<Destination[]>(() =>
-    readStorage('he_dest', seedDestinations),
-  );
+  const [destinations, setDestinations] = useState<Destination[]>(() => {
+    const stored = readStorage('he_dest', seedDestinations);
+    return stored.map((d) => {
+      const seed = seedDestinations.find((s) => s.id === d.id);
+      if (!seed) return d;
+      const isCustomExternalUrl =
+        Boolean(d.imageUrl) &&
+        (d.imageUrl.startsWith('http://') ||
+          d.imageUrl.startsWith('https://') ||
+          d.imageUrl.startsWith('data:'));
+      return !isCustomExternalUrl && seed.imageUrl
+        ? { ...d, imageUrl: seed.imageUrl }
+        : d;
+    });
+  });
   const [foods, setFoods] = useState<FoodItem[]>(() =>
     readStorage('he_food', seedFood),
   );

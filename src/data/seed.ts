@@ -6,6 +6,19 @@ import type {
   StayItem,
 } from '../types/aceh';
 
+import imgBaiturrahman from '../assets/images/dest_baiturrahman_mosque_1795595506539.jpg';
+import imgTsunamiMuseum from '../assets/images/dest_tsunami_museum_1795595506969.jpg';
+import imgPltdApung from '../assets/images/dest_pltd_apung_1795595507893.jpg';
+import imgIboihBeach from '../assets/images/dest_iboih_beach_1795595508369.jpg';
+import imgNolKilometer from '../assets/images/dest_nol_kilometer_1795595508297.jpg';
+import imgLampuukBeach from '../assets/images/dest_lampuuk_beach_1795595509184.jpg';
+import imgLhokngaBeach from '../assets/images/dest_lhoknga_beach_1795595509718.jpg';
+import imgSuhomWaterfall from '../assets/images/dest_suhom_waterfall_1795595510194.jpg';
+import imgLautTawar from '../assets/images/dest_laut_tawar_1795595510416.jpg';
+import imgTowerenVillage from '../assets/images/dest_toweren_village_1795595511280.jpg';
+import imgTansaranBidin from '../assets/images/dest_tansaran_bidin_1795595512305.jpg';
+import imgGayoCoffee from '../assets/images/dest_gayo_coffee_1795595526362.jpg';
+
 export const REGIONS = [
   'Banda Aceh',
   'Sabang',
@@ -34,7 +47,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Ikon kota Banda Aceh dengan arsitektur megah dan nilai sejarah yang kuat. Periksa ketentuan kunjungan dan waktu ibadah.',
-    imageUrl: '',
+    imageUrl: imgBaiturrahman,
     alamat: 'Kota Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Masjid+Raya+Baiturrahman',
     estimasiBiaya: 0,
@@ -49,7 +62,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Ruang edukasi dan memorial untuk mengenang peristiwa tsunami 2004. Jam operasional dan tiket perlu diperiksa.',
-    imageUrl: '',
+    imageUrl: imgTsunamiMuseum,
     alamat: 'Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Museum+Tsunami+Aceh',
     estimasiBiaya: 20000,
@@ -64,7 +77,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Situs memorial kapal pembangkit listrik yang terseret tsunami. Informasi kunjungan dapat berubah.',
-    imageUrl: '',
+    imageUrl: imgPltdApung,
     alamat: 'Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kapal+PLTD+Apung',
     estimasiBiaya: 10000,
@@ -79,7 +92,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Sabang',
     deskripsi:
       'Kawasan pantai dan laut yang dikenal dengan panorama bawah laut Pulau Weh. Kondisi laut dan layanan perlu dicek.',
-    imageUrl: '',
+    imageUrl: imgIboihBeach,
     alamat: 'Iboih, Sukakarya, Sabang (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Iboih+Sabang',
     estimasiBiaya: 15000,
@@ -94,7 +107,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Sabang',
     deskripsi:
       'Titik penanda geografis di Pulau Weh dengan pemandangan alam. Akses dan kondisi fasilitas dapat berubah.',
-    imageUrl: '',
+    imageUrl: imgNolKilometer,
     alamat: 'Iboih, Sabang, Aceh (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Tugu+Nol+Kilometer+Sabang',
     estimasiBiaya: 10000,
@@ -109,7 +122,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Kawasan pesisir dengan bentang pantai yang menarik untuk menikmati suasana laut. Perhatikan keselamatan dan aturan setempat.',
-    imageUrl: '',
+    imageUrl: imgLampuukBeach,
     alamat: 'Lhoknga, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Lampuuk+Aceh+Besar',
     estimasiBiaya: 10000,
@@ -124,7 +137,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Pantai yang populer untuk menikmati pemandangan pesisir. Aktivitas air bergantung cuaca dan kondisi ombak.',
-    imageUrl: '',
+    imageUrl: imgLhokngaBeach,
     alamat: 'Lhoknga, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Lhoknga',
     estimasiBiaya: 10000,
@@ -139,7 +152,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Destinasi alam berupa air terjun di kawasan Lhoong. Periksa kondisi jalur dan keselamatan sebelum berkunjung.',
-    imageUrl: '',
+    imageUrl: imgSuhomWaterfall,
     alamat: 'Lhoong, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Suhom',
     estimasiBiaya: 10000,
@@ -154,7 +167,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Tengah',
     deskripsi:
       'Danau di dataran tinggi Gayo yang dikelilingi perbukitan. Cuaca dan akses lokasi wisata di sekitar danau perlu diperiksa.',
-    imageUrl: '',
+    imageUrl: imgLautTawar,
     alamat: 'Takengon, Aceh Tengah (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Danau+Laut+Tawar',
     estimasiBiaya: 10000,
@@ -169,7 +182,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Tengah',
     deskripsi:
       'Kawasan permukiman di sekitar Danau Laut Tawar yang dapat menjadi pintu mengenal budaya Gayo. Program kunjungan perlu dikonfirmasi.',
-    imageUrl: '',
+    imageUrl: imgTowerenVillage,
     alamat: 'Toweren, Aceh Tengah (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kampung+Toweren+Aceh+Tengah',
     estimasiBiaya: 25000,
@@ -184,7 +197,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Bener Meriah',
     deskripsi:
       'Tujuan wisata alam di kawasan Bener Meriah. Kondisi jalan, jalur trekking, dan fasilitas perlu diverifikasi sebelum berangkat.',
-    imageUrl: '',
+    imageUrl: imgTansaranBidin,
     alamat: 'Bener Meriah, Aceh (lokasi rinci perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Tansaran+Bidin',
     estimasiBiaya: 15000,
@@ -199,7 +212,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Bener Meriah',
     deskripsi:
       'Pengalaman mengenal lanskap perkebunan kopi Gayo dan budaya kopi dataran tinggi. Kunjungan kebun harus dengan izin pengelola.',
-    imageUrl: '',
+    imageUrl: imgGayoCoffee,
     alamat: 'Bener Meriah, Aceh (lokasi kebun perlu konfirmasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kebun+Kopi+Gayo+Bener+Meriah',
     estimasiBiaya: 30000,

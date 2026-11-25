@@ -177,7 +177,7 @@ export function DestinationsSection({
               return (
                 <article
                   key={d.id}
-                  className="overflow-hidden rounded-[10px] border border-[#dce7eb] bg-white shadow-[0_8px_25px_#123b520d] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_38px_#123b5220]"
+                  className="group overflow-hidden rounded-[10px] border border-[#dce7eb] bg-white shadow-[0_8px_25px_#123b520d] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_38px_#123b5220]"
                 >
                   <div
                     className={`relative flex h-[190px] items-end overflow-hidden p-4 text-white ${visualGradient(d.kategori)}`}
@@ -192,7 +192,7 @@ export function DestinationsSection({
                         onError={() =>
                           setFailedImages((prev) => ({ ...prev, [d.id]: true }))
                         }
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       />
                     ) : (
                       <span
@@ -202,7 +202,7 @@ export function DestinationsSection({
                         {categoryEmoji(d.kategori)}
                       </span>
                     )}
-                    <span className="relative z-10 text-xl font-extrabold">
+                    <span className="relative z-20 text-xl font-extrabold">
                       {d.wilayah}
                     </span>
                   </div>
