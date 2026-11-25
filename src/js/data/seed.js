@@ -1,45 +1,4 @@
-import type {
-  Destination,
-  FoodItem,
-  Language,
-  PackageItem,
-  StayItem,
-} from '../types/aceh';
-
-import imgBaiturrahman from '../assets/images/dest_baiturrahman_mosque_1795595506539.jpg';
-import imgTsunamiMuseum from '../assets/images/dest_tsunami_museum_1795595506969.jpg';
-import imgPltdApung from '../assets/images/dest_pltd_apung_1795595507893.jpg';
-import imgIboihBeach from '../assets/images/dest_iboih_beach_1795595508369.jpg';
-import imgNolKilometer from '../assets/images/dest_nol_kilometer_1795595508297.jpg';
-import imgLampuukBeach from '../assets/images/dest_lampuuk_beach_1795595509184.jpg';
-import imgLhokngaBeach from '../assets/images/dest_lhoknga_beach_1795595509718.jpg';
-import imgSuhomWaterfall from '../assets/images/dest_suhom_waterfall_1795595510194.jpg';
-import imgLautTawar from '../assets/images/dest_laut_tawar_1795595510416.jpg';
-import imgTowerenVillage from '../assets/images/dest_toweren_village_1795595511280.jpg';
-import imgTansaranBidin from '../assets/images/dest_tansaran_bidin_1795595512305.jpg';
-import imgGayoCoffee from '../assets/images/dest_gayo_coffee_1795595526362.jpg';
-
-export const REGIONS = [
-  'Banda Aceh',
-  'Sabang',
-  'Aceh Besar',
-  'Aceh Tengah',
-  'Bener Meriah',
-] as const;
-
-export const CATEGORIES = [
-  'Religi',
-  'Alam',
-  'Bahari',
-  'Sejarah',
-  'Budaya',
-  'Kuliner',
-] as const;
-
-export const DASH_PIN = '1234';
-export const SAFE_URL_FALLBACK = 'https://www.google.com/maps';
-
-export const seedDestinations: Destination[] = [
+export const seedDest = [
   {
     id: 'd1',
     nama: 'Masjid Raya Baiturrahman',
@@ -47,9 +6,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Ikon kota Banda Aceh dengan arsitektur megah dan nilai sejarah yang kuat. Periksa ketentuan kunjungan dan waktu ibadah.',
-    imageUrl: imgBaiturrahman,
+    imageUrl: 'assets/destinasi/d1.jpg',
     alamat: 'Kota Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Masjid+Raya+Baiturrahman',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Masjid+Raya+Baiturrahman',
     estimasiBiaya: 0,
     fasilitas: ['Area kunjungan', 'Area parkir (perlu verifikasi)'],
     fasilitasIbadah: ['Masjid'],
@@ -62,9 +22,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Ruang edukasi dan memorial untuk mengenang peristiwa tsunami 2004. Jam operasional dan tiket perlu diperiksa.',
-    imageUrl: imgTsunamiMuseum,
+    imageUrl: 'assets/destinasi/d2.jpg',
     alamat: 'Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Museum+Tsunami+Aceh',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Museum+Tsunami+Aceh',
     estimasiBiaya: 20000,
     fasilitas: ['Ruang pamer', 'Area edukasi'],
     fasilitasIbadah: ['Fasilitas ibadah sekitar perlu dikonfirmasi'],
@@ -77,7 +38,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Banda Aceh',
     deskripsi:
       'Situs memorial kapal pembangkit listrik yang terseret tsunami. Informasi kunjungan dapat berubah.',
-    imageUrl: imgPltdApung,
+    imageUrl: 'assets/destinasi/d3.jpg',
     alamat: 'Banda Aceh, Aceh (alamat rinci perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kapal+PLTD+Apung',
     estimasiBiaya: 10000,
@@ -92,9 +53,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Sabang',
     deskripsi:
       'Kawasan pantai dan laut yang dikenal dengan panorama bawah laut Pulau Weh. Kondisi laut dan layanan perlu dicek.',
-    imageUrl: imgIboihBeach,
+    imageUrl: 'assets/destinasi/d4.jpg',
     alamat: 'Iboih, Sukakarya, Sabang (perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Iboih+Sabang',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Pantai+Iboih+Sabang',
     estimasiBiaya: 15000,
     fasilitas: ['Pantai', 'Aktivitas bahari (operator perlu verifikasi)'],
     fasilitasIbadah: ['Tempat ibadah terdekat perlu dikonfirmasi'],
@@ -107,9 +69,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Sabang',
     deskripsi:
       'Titik penanda geografis di Pulau Weh dengan pemandangan alam. Akses dan kondisi fasilitas dapat berubah.',
-    imageUrl: imgNolKilometer,
+    imageUrl: 'assets/destinasi/d5.jpg',
     alamat: 'Iboih, Sabang, Aceh (perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Tugu+Nol+Kilometer+Sabang',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Tugu+Nol+Kilometer+Sabang',
     estimasiBiaya: 10000,
     fasilitas: ['Area pandang'],
     fasilitasIbadah: ['Fasilitas ibadah sekitar perlu dikonfirmasi'],
@@ -122,9 +85,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Kawasan pesisir dengan bentang pantai yang menarik untuk menikmati suasana laut. Perhatikan keselamatan dan aturan setempat.',
-    imageUrl: imgLampuukBeach,
+    imageUrl: 'assets/destinasi/d6.jpg',
     alamat: 'Lhoknga, Aceh Besar (perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Lampuuk+Aceh+Besar',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Pantai+Lampuuk+Aceh+Besar',
     estimasiBiaya: 10000,
     fasilitas: ['Area pantai', 'Warung sekitar (perlu verifikasi)'],
     fasilitasIbadah: ['Fasilitas ibadah sekitar perlu dikonfirmasi'],
@@ -137,7 +101,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Pantai yang populer untuk menikmati pemandangan pesisir. Aktivitas air bergantung cuaca dan kondisi ombak.',
-    imageUrl: imgLhokngaBeach,
+    imageUrl: 'assets/destinasi/d7.jpg',
     alamat: 'Lhoknga, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Pantai+Lhoknga',
     estimasiBiaya: 10000,
@@ -152,7 +116,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Besar',
     deskripsi:
       'Destinasi alam berupa air terjun di kawasan Lhoong. Periksa kondisi jalur dan keselamatan sebelum berkunjung.',
-    imageUrl: imgSuhomWaterfall,
+    imageUrl: 'assets/destinasi/d8.jpg',
     alamat: 'Lhoong, Aceh Besar (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Suhom',
     estimasiBiaya: 10000,
@@ -167,7 +131,7 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Tengah',
     deskripsi:
       'Danau di dataran tinggi Gayo yang dikelilingi perbukitan. Cuaca dan akses lokasi wisata di sekitar danau perlu diperiksa.',
-    imageUrl: imgLautTawar,
+    imageUrl: 'assets/destinasi/d9.jpg',
     alamat: 'Takengon, Aceh Tengah (perlu verifikasi)',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Danau+Laut+Tawar',
     estimasiBiaya: 10000,
@@ -182,9 +146,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Aceh Tengah',
     deskripsi:
       'Kawasan permukiman di sekitar Danau Laut Tawar yang dapat menjadi pintu mengenal budaya Gayo. Program kunjungan perlu dikonfirmasi.',
-    imageUrl: imgTowerenVillage,
+    imageUrl: 'assets/destinasi/d10.jpg',
     alamat: 'Toweren, Aceh Tengah (perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kampung+Toweren+Aceh+Tengah',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Kampung+Toweren+Aceh+Tengah',
     estimasiBiaya: 25000,
     fasilitas: ['Pengalaman budaya (perlu konfirmasi)'],
     fasilitasIbadah: ['Fasilitas ibadah setempat perlu dikonfirmasi'],
@@ -197,9 +162,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Bener Meriah',
     deskripsi:
       'Tujuan wisata alam di kawasan Bener Meriah. Kondisi jalan, jalur trekking, dan fasilitas perlu diverifikasi sebelum berangkat.',
-    imageUrl: imgTansaranBidin,
+    imageUrl: 'assets/destinasi/d11.jpg',
     alamat: 'Bener Meriah, Aceh (lokasi rinci perlu verifikasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Tansaran+Bidin',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Air+Terjun+Tansaran+Bidin',
     estimasiBiaya: 15000,
     fasilitas: ['Area alam', 'Jalur trekking perlu verifikasi'],
     fasilitasIbadah: ['Fasilitas ibadah sekitar perlu dikonfirmasi'],
@@ -212,9 +178,10 @@ export const seedDestinations: Destination[] = [
     wilayah: 'Bener Meriah',
     deskripsi:
       'Pengalaman mengenal lanskap perkebunan kopi Gayo dan budaya kopi dataran tinggi. Kunjungan kebun harus dengan izin pengelola.',
-    imageUrl: imgGayoCoffee,
+    imageUrl: 'assets/destinasi/d12.jpg',
     alamat: 'Bener Meriah, Aceh (lokasi kebun perlu konfirmasi)',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Kebun+Kopi+Gayo+Bener+Meriah',
+    mapsUrl:
+      'https://www.google.com/maps/search/?api=1&query=Kebun+Kopi+Gayo+Bener+Meriah',
     estimasiBiaya: 30000,
     fasilitas: ['Edukasi kopi (mitra perlu verifikasi)'],
     fasilitasIbadah: ['Fasilitas ibadah sekitar perlu dikonfirmasi'],
@@ -222,7 +189,7 @@ export const seedDestinations: Destination[] = [
   },
 ];
 
-export const seedFood: FoodItem[] = [
+export const seedFood = [
   {
     id: 'f1',
     nama: 'Mie Aceh',
@@ -269,7 +236,7 @@ export const seedFood: FoodItem[] = [
   },
 ];
 
-export const seedStays: StayItem[] = [
+export const seedStay = [
   {
     id: 'a1',
     nama: 'Penginapan Kota Banda Aceh (Demo)',
@@ -302,7 +269,7 @@ export const seedStays: StayItem[] = [
   },
 ];
 
-export const seedPackages: PackageItem[] = [
+export const seedPackages = [
   {
     id: 'p1',
     nama: 'Jejak Sejarah Banda Aceh',
@@ -336,103 +303,3 @@ export const seedPackages: PackageItem[] = [
     deskripsi: 'Jelajahi pantai dan air terjun di Aceh Besar.',
   },
 ];
-
-export const TRANSLATIONS: Record<
-  Language,
-  {
-    topLeft: string;
-    topNote: string;
-    navDest: string;
-    navFood: string;
-    navStay: string;
-    navPlan: string;
-    navDash: string;
-    explore: string;
-    signIn: string;
-    signOut: string;
-  }
-> = {
-  id: {
-    topLeft: 'Jelajahi Aceh dengan nyaman dan penuh makna',
-    topNote: 'Data demo · Informasi perlu diverifikasi',
-    navDest: 'Destinasi',
-    navFood: 'Kuliner',
-    navStay: 'Akomodasi',
-    navPlan: 'Rencana',
-    navDash: 'Dashboard',
-    explore: 'Jelajahi ↗',
-    signIn: 'Masuk',
-    signOut: 'Keluar',
-  },
-  en: {
-    topLeft: 'Explore Aceh with comfort and peace of mind',
-    topNote: 'Demo data · Information requires verification',
-    navDest: 'Destinations',
-    navFood: 'Food',
-    navStay: 'Stays',
-    navPlan: 'Planner',
-    navDash: 'Dashboard',
-    explore: 'Explore ↗',
-    signIn: 'Sign in',
-    signOut: 'Sign out',
-  },
-};
-
-export function rupiah(n: number | undefined): string {
-  return 'Rp ' + Number(n || 0).toLocaleString('id-ID');
-}
-
-export function safeUrl(url: string | undefined): string {
-  try {
-    const parsed = new URL(String(url ?? '').trim());
-    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-      return parsed.href;
-    }
-  } catch {
-    // ignore malformed URLs
-  }
-  return SAFE_URL_FALLBACK;
-}
-
-export function isValidGmail(value: string): boolean {
-  return /^[a-z0-9](?:[a-z0-9._%+-]*[a-z0-9])?@gmail\.com$/i.test(value);
-}
-
-export function readStorage<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return structuredClone(fallback);
-    const parsed = JSON.parse(raw);
-    return (parsed ?? structuredClone(fallback)) as T;
-  } catch {
-    return structuredClone(fallback);
-  }
-}
-
-export function compressImageFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Failed to read image file'));
-    reader.onload = () => {
-      const img = new Image();
-      img.onerror = () => reject(new Error('Failed to decode image'));
-      img.onload = () => {
-        const maxW = 1200;
-        const maxH = 900;
-        const scale = Math.min(1, maxW / img.width, maxH / img.height);
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject(new Error('Canvas context unavailable'));
-          return;
-        }
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.78));
-      };
-      img.src = String(reader.result || '');
-    };
-    reader.readAsDataURL(file);
-  });
-}
