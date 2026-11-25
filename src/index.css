@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-navy-900: #102f43;
+  --color-navy-800: #123b52;
+  --color-teal-700: #066c78;
+  --color-teal-600: #087f8c;
+  --color-teal-400: #35a9ad;
+  --color-gold-400: #e5a85b;
+  --color-ink: #183342;
+  --color-muted: #687e89;
+  --color-surface: #f3f7f8;
+  --color-line: #dce7eb;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+  }
+}
