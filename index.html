@@ -219,7 +219,7 @@ function persist(){localStorage.setItem("he_dest",JSON.stringify(data.destinasi)
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const SAFE_URL_FALLBACK="https://www.google.com/maps";
 function safeUrl(url){try{const u=new URL(String(url??"").trim());if(u.protocol==="http:"||u.protocol==="https:")return u.href}catch{}return SAFE_URL_FALLBACK}
-function photoOf(item){return item?.imageData||item?.imageUrl||""}
+function photoOf(item){const u=item?.imageData||item?.imageUrl||"";return u.replace(/^assets\/destinasi\//,"public/assets/aistudio/")}
 const rupiah=n=>"Rp "+Number(n||0).toLocaleString("id-ID");
 function destById(id){return data.destinasi.find(x=>x.id===id)}
 function visualClass(cat){return cat==="Bahari"?"v-blue":cat==="Sejarah"?"v-gold":cat==="Religi"?"v-purple":cat==="Budaya"?"v-green":""}
